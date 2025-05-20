@@ -10,6 +10,7 @@ import { useCustomerContext } from "../../hooks/useCustomerContext";
 import UpdateCustomerModal from "./UpdateCustomerModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import CustomerDetailsModal from "./CustomerDetailsModal";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 export default function CustomerPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,20 +24,28 @@ export default function CustomerPage() {
   const [deleteModal, setDeleteModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-
   const { mycustomers, dispatch } = useCustomerContext();
+  const { user } = useAuthContext();
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http://localhost:3000/api/customers/");
+      const response = await fetch("http://localhost:3000/api/customers/", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
       const json = await response.json();
       if (response.ok) {
         dispatch({ type: "SET_CUSTOMER", payload: json });
       }
     };
 
-    fetchData();
-  }, [dispatch]);
+    console.log(user + " hello baby");
+
+    if (user) {
+      fetchData();
+    }
+  }, [dispatch, user]);
 
   const handleSearch = (e) => setSearchTerm(e.target.value);
 
@@ -57,6 +66,7 @@ export default function CustomerPage() {
         {
           method: "DELETE",
           headers: {
+            Authorization: `Bearer ${user.token}`,
             "Content-Type": "application/json",
           },
         }

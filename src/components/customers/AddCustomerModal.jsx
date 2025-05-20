@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import SuccessMessage from "./SuccessMessage";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 function AddCustomerModal({ showModal, setShowModal, dispatch }) {
   const [formData, setFormData] = useState({
@@ -50,6 +51,8 @@ function AddCustomerModal({ showModal, setShowModal, dispatch }) {
     }));
   };
 
+  const { user } = useAuthContext();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -57,6 +60,7 @@ function AddCustomerModal({ showModal, setShowModal, dispatch }) {
       const response = await fetch("http://localhost:3000/api/customers/", {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${user.token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),

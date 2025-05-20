@@ -6,6 +6,7 @@ import SalesTable from "../../components/soldpage/SalesTable";
 import SalesEmptyState from "../../components/soldpage/SalesEmptyState";
 import SalesLoading from "../../components/soldpage/SalesLoading";
 import SalesError from "../../components/soldpage/SalesError";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 function SoldProductsPage() {
   const [bills, setBills] = useState([]);
@@ -19,11 +20,17 @@ function SoldProductsPage() {
   });
   const [dateFilter, setDateFilter] = useState("");
 
+  const { user } = useAuthContext();
+
   useEffect(() => {
     const fetchBills = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:3000/api/bills/");
+        const response = await fetch("http://localhost:3000/api/bills/", {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch bills");
         }

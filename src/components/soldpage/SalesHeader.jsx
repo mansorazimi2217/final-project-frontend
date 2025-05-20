@@ -26,7 +26,7 @@ export default function SalesHeader({ totalSales }) {
         <div>
           <p className="text-xs text-gray-500">Total Sales</p>
           <p className="text-lg font-semibold text-gray-800">
-            Rs {totalSales.toLocaleString()}
+            {totalSales.toLocaleString()}
           </p>
         </div>
       </motion.div>

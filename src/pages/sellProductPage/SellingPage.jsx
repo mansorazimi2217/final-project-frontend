@@ -4,6 +4,7 @@ import SideBarSellPage from "../../components/sellingproductpage/SideBarSellPage
 import MainContentSellPage from "../../components/sellingproductpage/MainContentSellPage";
 import DeleteModal from "../../components/sellingproductpage/DeleteModal";
 import Navbar from "../../components/Navbar";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const SellingPage = () => {
   const [products, setProducts] = useState([]);
@@ -34,10 +35,16 @@ const SellingPage = () => {
   };
 
   // Fetch data from API and transform it
+
+  const { user } = useAuthContext();
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/products");
+        const response = await fetch("http://localhost:3000/api/products", {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
         const data = await response.json();
 
         const transformed = data.map((item) => ({
@@ -59,8 +66,10 @@ const SellingPage = () => {
       }
     };
 
-    fetchProducts();
-  }, []);
+    if (user) {
+      fetchProducts();
+    }
+  }, [user]);
 
   // Check screen size
   useEffect(() => {

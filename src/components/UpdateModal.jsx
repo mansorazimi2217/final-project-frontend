@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useProductsContext } from "../hooks/useProductsContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const UpdateModal = ({ setUpdateModal, productToUpdate }) => {
   const { dispatch } = useProductsContext();
@@ -25,6 +26,7 @@ const UpdateModal = ({ setUpdateModal, productToUpdate }) => {
   const [error, setError] = useState(null);
   const [emptFeilds, setEmptFeilds] = useState([]);
 
+  const { user } = useAuthContext();
   useEffect(() => {
     setName(productToUpdate.name);
     setBrand(productToUpdate.brand);
@@ -42,6 +44,9 @@ const UpdateModal = ({ setUpdateModal, productToUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user) {
+      return;
+    }
     const formData = new FormData();
     formData.append("name", name);
     formData.append("brand", brand);
@@ -59,6 +64,9 @@ const UpdateModal = ({ setUpdateModal, productToUpdate }) => {
       `http://localhost:3000/api/products/${productToUpdate._id}`,
       {
         method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
         body: formData,
       }
     );

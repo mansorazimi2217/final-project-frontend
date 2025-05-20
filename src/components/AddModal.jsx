@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useProductsContext } from "../hooks/useProductsContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const AddModal = ({ setAddModal }) => {
   const { dispatch } = useProductsContext();
@@ -21,8 +22,15 @@ const AddModal = ({ setAddModal }) => {
   const [error, setError] = useState(null);
   const [emptFeilds, setEmptFeilds] = useState([]);
 
+  const { user } = useAuthContext();
+
   const hundleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      setError("you most be logged in");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("name", name);
@@ -35,10 +43,13 @@ const AddModal = ({ setAddModal }) => {
     formData.append("currency", currency);
     formData.append("expire_date", expireDate);
     formData.append("come_date", comeDate);
-    formData.append("productImage", img); // ← this should be a File object
+    formData.append("productImage", img);
 
     const response = await fetch("http://localhost:3000/api/products", {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
       body: formData,
     });
 
@@ -46,7 +57,7 @@ const AddModal = ({ setAddModal }) => {
 
     if (!response.ok) {
       setError(json.error);
-      setEmptFeilds(json.emptFeilds);
+      setEmptFeilds(json.emptFeilds || []);
     }
 
     if (response.ok) {

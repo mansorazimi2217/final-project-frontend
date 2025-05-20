@@ -5,6 +5,7 @@ import Input from "./Input";
 import Button from "./Button";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 function MainContentSellPage({
   formData,
@@ -28,10 +29,15 @@ function MainContentSellPage({
 
   const navigate = useNavigate();
 
+  const { user } = useAuthContext();
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/customers/");
+        const res = await fetch("http://localhost:3000/api/customers/", {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
         if (!res.ok) throw new Error("Failed to fetch customers");
         const data = await res.json();
         setCustomers(data);
@@ -41,7 +47,7 @@ function MainContentSellPage({
     };
 
     fetchCustomers();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const customer = customers.find((cust) => cust._id === selectedCustomerId);
@@ -71,6 +77,7 @@ function MainContentSellPage({
       await fetch(`http://localhost:3000/api/customers/${customerId}`, {
         method: "PATCH",
         headers: {
+          Authorization: `Bearer ${user.token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -198,7 +205,10 @@ function MainContentSellPage({
 
       const billResponse = await fetch("http://localhost:3000/api/bills/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(billPayload),
       });
 
@@ -214,7 +224,10 @@ function MainContentSellPage({
           `http://localhost:3000/api/products/${item.id}`,
           {
             method: "PATCH",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify({ soldQuantity: item.quantity }),
           }
         );

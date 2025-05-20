@@ -10,6 +10,7 @@ import ProductsPage from "./pages/produts/ProductsPage";
 import CustomersPage from "./pages/CustomersPage";
 import SellingPage from "./pages/sellProductPage/SellingPage";
 import SoldProductsPage from "./pages/SoldProductsPage/SoldProductsPage";
+import ProtectedRoutes from "./utils/ProtectedRoutes";
 
 const App = () => {
   return (
@@ -19,24 +20,29 @@ const App = () => {
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login2 />}></Route>
           <Route path="/register" element={<Register2 />}></Route>
-          <Route path="/dashboard" element={<Dashboard />}></Route>
-          <Route
-            path="/dashboard/updateprofile"
-            element={<UpdateProfileImage />}
-          ></Route>
-          <Route path="/dashboard/products" element={<ProductsPage />}></Route>
-          <Route
-            path="/dashboard/customers"
-            element={<CustomersPage />}
-          ></Route>
-          <Route
-            path="/dashboard/sellingpage"
-            element={<SellingPage />}
-          ></Route>
-          <Route
-            path="/dashboard/soldproducts"
-            element={<SoldProductsPage />}
-          ></Route>
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route
+              path="/dashboard/updateprofile"
+              element={<UpdateProfileImage />}
+            ></Route>
+            <Route
+              path="/dashboard/products"
+              element={<ProductsPage />}
+            ></Route>
+            <Route
+              path="/dashboard/customers"
+              element={<CustomersPage />}
+            ></Route>
+            <Route
+              path="/dashboard/sellingpage"
+              element={<SellingPage />}
+            ></Route>
+            <Route
+              path="/dashboard/soldproducts"
+              element={<SoldProductsPage />}
+            ></Route>
+          </Route>
         </Routes>
       </BrowserRouter>
     </>

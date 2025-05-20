@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import SuccessMessage from "./SuccessMessage";
-
+import { useAuthContext } from "../../hooks/useAuthContext";
 function UpdateCustomerModal({ customer, showModal, setShowModal, dispatch }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -14,6 +14,7 @@ function UpdateCustomerModal({ customer, showModal, setShowModal, dispatch }) {
   });
   const [showSuccess, setShowSuccess] = useState(false);
   const [progress, setProgress] = useState(0);
+  const { user } = useAuthContext();
 
   // Initialize form with customer data
   useEffect(() => {
@@ -76,6 +77,7 @@ function UpdateCustomerModal({ customer, showModal, setShowModal, dispatch }) {
         {
           method: "PATCH",
           headers: {
+            Authorization: `Bearer ${user.token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),

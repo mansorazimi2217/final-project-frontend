@@ -10,6 +10,7 @@ import ProductsCard from "../../components/ProductsCard";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { useProductsContext } from "../../hooks/useProductsContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 export default function ProductsPage() {
   const [search, setSearch] = useState("");
@@ -30,11 +31,16 @@ export default function ProductsPage() {
   const [deleteModal, setDeleteModal] = useState(null);
   const [updateModal, setUpdateModal] = useState(false);
   const [productToUpdate, setProductToUpdate] = useState(null);
-
   const { products, dispatch } = useProductsContext();
+  const { user } = useAuthContext();
+
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await fetch("http://localhost:3000/api/products");
+      const response = await fetch("http://localhost:3000/api/products", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
       const json = await response.json();
 
       if (response.ok) {
@@ -42,8 +48,11 @@ export default function ProductsPage() {
       }
     };
 
-    fetchProducts();
-  }, []);
+    if (user) {
+      fetchProducts();
+      console.log(user);
+    }
+  }, [dispatch, user]);
 
   const isExpiringSoon = (expiryDate) => {
     if (!expiryDate) return false;

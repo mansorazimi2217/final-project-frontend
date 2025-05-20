@@ -1,13 +1,21 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 function DeleteModal({ deleteModal, setDeleteModal, setProducts, products }) {
+  const { user } = useAuthContext();
   const handleDelete = async () => {
+    if (!user) {
+      return;
+    }
     const response = await fetch(
       "http://localhost:3000/api/products/" + deleteModal._id,
       {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       }
     );
 
