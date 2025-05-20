@@ -155,5 +155,3 @@ const Login2 = () => {
 };
 
 export default Login2;
-
-// style={{ backgroundImage: `url(${registerimg})` }}

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { FiTrash2, FiAlertTriangle } from "react-icons/fi";
 import Input from "./Input";
 import Button from "./Button";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 function MainContentSellPage({
   formData,
@@ -73,6 +75,7 @@ function MainContentSellPage({
         },
         body: JSON.stringify({
           totalSpent: Number(totalPaied),
+          remainVale: Number(totalAmount) - Number(totalPaied),
         }),
       });
     } catch (error) {
@@ -81,26 +84,98 @@ function MainContentSellPage({
     }
   };
 
+  const generatePDF = ({
+    cartItems,
+    totalAmount,
+    totalPaied,
+    selectedCustomer,
+    tempCustomerName,
+    customerType,
+  }) => {
+    const doc = new jsPDF();
+
+    let email = "store@example.com";
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        email = user.businessName || email;
+      } catch (e) {
+        console.error("Error parsing user data from localStorage", e);
+      }
+    }
+
+    const storeName = email;
+
+    const customerName =
+      customerType === "permanent" ? selectedCustomer?.name : tempCustomerName;
+
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.text(storeName.toUpperCase(), 105, 20, { align: "center" });
+
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "normal");
+    doc.text("Sales Receipt", 105, 30, { align: "center" });
+
+    doc.setDrawColor(100);
+    doc.line(14, 35, 196, 35);
+    doc.setFontSize(12);
+    doc.text(`Customer: ${customerName}`, 14, 45);
+    doc.text(`Date: ${new Date().toLocaleString()}`, 14, 52);
+    doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, 14, 59);
+    doc.text(`Paid: $${Number(totalPaied).toFixed(2)}`, 14, 66);
+    doc.text(
+      `Remaining: $${(totalAmount - Number(totalPaied)).toFixed(2)}`,
+      14,
+      73
+    );
+
+    autoTable(doc, {
+      head: [["Product ID", "Name", "Qty", "Price", "Total"]],
+      body: cartItems.map((item) => [
+        item.id,
+        item.name,
+        item.quantity,
+        `$${item.price.toFixed(2)}`,
+        `$${item.total.toFixed(2)}`,
+      ]),
+      startY: 80,
+      styles: { halign: "center", fontSize: 10 },
+      headStyles: {
+        fillColor: [0, 110, 189],
+        textColor: 255,
+        fontStyle: "bold",
+      },
+      alternateRowStyles: { fillColor: [245, 245, 245] },
+      margin: { top: 10, left: 14, right: 14 },
+    });
+
+    doc.save(`receipt_${Date.now()}.pdf`);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (customerType === "permanent" && (!selectedCustomer || !totalPaied)) {
-      alert("Please select a customer and enter total paid.");
+    if (cartItems.length === 0) {
+      alert("🛒 Please add products to the cart before purchasing.");
       return;
     }
 
-    if (customerType === "temporary" && !tempCustomerName) {
-      alert("Please enter the customer name.");
+    if (
+      (customerType === "permanent" && (!selectedCustomer || !totalPaied)) ||
+      (customerType === "temporary" && !tempCustomerName)
+    ) {
+      alert("👤 Please select a customer and enter valid payment details.");
       return;
     }
 
     if (totalPaidError) {
-      alert("Please fix the total paid amount.");
+      alert("❌ Please fix the total paid amount.");
       return;
     }
 
     try {
-      // First create the bill
       const billPayload = {
         total: totalAmount,
         totalPaied: Number(totalPaied),
@@ -127,16 +202,13 @@ function MainContentSellPage({
         body: JSON.stringify(billPayload),
       });
 
-      if (!billResponse.ok) {
+      if (!billResponse.ok)
         throw new Error(`HTTP error! status: ${billResponse.status}`);
-      }
 
-      // If permanent customer, update their stats
       if (customerType === "permanent" && selectedCustomerId) {
         await updateCustomerStats(selectedCustomerId);
       }
 
-      // Update product stocks
       for (let item of cartItems) {
         const updateRes = await fetch(
           `http://localhost:3000/api/products/${item.id}`,
@@ -152,7 +224,16 @@ function MainContentSellPage({
         }
       }
 
-      alert("✅ Products sold successfully and stock updated!");
+      generatePDF({
+        cartItems,
+        totalAmount,
+        totalPaied,
+        selectedCustomer,
+        tempCustomerName,
+        customerType,
+      });
+
+      alert("✅ Products sold and stock updated successfully!");
       setSelectedCustomerId("");
       setSelectedCustomer(null);
       setTempCustomerName("");
@@ -176,7 +257,6 @@ function MainContentSellPage({
           Sell Products
         </h2>
 
-        {/* Product Form */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input label="Product ID" name="id" value={formData.id} readOnly />
           <Input
@@ -222,7 +302,6 @@ function MainContentSellPage({
           <Button onClick={handleAddToCart}>Add To Cart</Button>
         </div>
 
-        {/* Cart Table */}
         <div className="border rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -261,7 +340,6 @@ function MainContentSellPage({
           </div>
         </div>
 
-        {/* Customer Type Selection */}
         <div className="flex gap-4 items-center">
           <label className="flex items-center space-x-2">
             <input
@@ -281,11 +359,10 @@ function MainContentSellPage({
               checked={customerType === "temporary"}
               onChange={(e) => setCustomerType(e.target.value)}
             />
-            <span>Temporary Customer</span>
+            <span>Guest Customer</span>
           </label>
         </div>
 
-        {/* Customer & Payment Inputs */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {customerType === "permanent" ? (
             <div>
@@ -333,7 +410,6 @@ function MainContentSellPage({
           </div>
         </div>
 
-        {/* Customer Info */}
         {customerType === "permanent" && selectedCustomer && (
           <div className="bg-gray-50 p-4 rounded-md border">
             <h4 className="font-semibold text-gray-700 mb-2">Customer Info</h4>
@@ -344,22 +420,25 @@ function MainContentSellPage({
               🏠 <strong>Address:</strong> {selectedCustomer.address}
             </p>
             <p className="text-sm text-gray-600">
-              💰 <strong>Total Spent:</strong> RS{" "}
+              💰 <strong>Total Spent:</strong>{" "}
               {selectedCustomer.totalSpent || 0}
             </p>
             <p className="text-sm text-gray-600">
               🛒 <strong>Total Orders:</strong>{" "}
               {selectedCustomer.totalOrders || 0}
             </p>
+            <p className="text-sm text-gray-600">
+              💸 <strong>Remain Value :</strong>{" "}
+              {selectedCustomer.remainValue || 0}
+            </p>
           </div>
         )}
 
-        {/* Submit Section */}
         <div className="flex justify-between items-center">
           <div className="text-lg font-semibold text-gray-800">
-            Total: RS: {totalAmount.toFixed(2)}
+            Total: {totalAmount.toFixed(2)}
           </div>
-          <Button onClick={handleSubmit}>Print & Purchase</Button>
+          <Button onClick={handleSubmit}>Purchase</Button>
         </div>
       </div>
     </div>

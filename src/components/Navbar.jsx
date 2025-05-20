@@ -62,10 +62,9 @@ const Navbar = ({ toggleSidebar }) => {
       <div ref={menuRef} className="relative flex items-center mr-4 ml-auto">
         {user && (
           <span className="mr-3 text-gray-700 hidden sm:inline">
-            {user.email}
+            {user.businessName}
           </span>
         )}
-
         {console.log(user)}
 
         {/* <img
