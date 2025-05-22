@@ -23,6 +23,7 @@ function SoldProductsPage() {
   const { user } = useAuthContext();
 
   useEffect(() => {
+    if (!user) return;
     const fetchBills = async () => {
       try {
         setLoading(true);
@@ -42,9 +43,8 @@ function SoldProductsPage() {
         setLoading(false);
       }
     };
-
     fetchBills();
-  }, []);
+  }, [user]);
 
   const handleSearch = () => {
     let filteredBills = [...bills];
@@ -55,6 +55,7 @@ function SoldProductsPage() {
           bill.customerName
             ?.toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
+          bill.customerId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           bill.products?.some((product) =>
             product.name?.toLowerCase().includes(searchQuery.toLowerCase())
           )

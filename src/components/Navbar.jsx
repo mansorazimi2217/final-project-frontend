@@ -5,7 +5,7 @@ import { useLogout } from "../hooks/useLogout";
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-const Navbar = ({ toggleSidebar }) => {
+const Navbar = ({ toggleSidebar, checkForSellPage }) => {
   const { user } = useAuthContext();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -143,7 +143,6 @@ const Navbar = ({ toggleSidebar }) => {
           </motion.span>
         )}
 
-        {/* Avatar with enhanced interaction */}
         <motion.div
           whileHover={{
             scale: 1.1,
@@ -159,7 +158,6 @@ const Navbar = ({ toggleSidebar }) => {
             </span>
           )}
 
-          {/* Active indicator ring */}
           {isMenuOpen && (
             <motion.span
               className="absolute inset-0 border-2 border-[#006EBD] rounded-full animate-ping opacity-75"
@@ -170,7 +168,6 @@ const Navbar = ({ toggleSidebar }) => {
           )}
         </motion.div>
 
-        {/* Enhanced dropdown menu */}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
@@ -205,7 +202,6 @@ const Navbar = ({ toggleSidebar }) => {
                 </p>
               </motion.div>
 
-              {/* Menu items */}
               <div className="py-1">
                 <motion.button
                   onClick={() => setIsMenuOpen(false)}

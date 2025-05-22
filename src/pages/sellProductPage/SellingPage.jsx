@@ -184,10 +184,16 @@ const SellingPage = () => {
     0
   );
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <>
       <div className="fixed top-0 left-0 w-full z-50 h-16">
-        <Navbar />
+        <Navbar toggleSidebar={toggleSidebar} checkForSellPage={true} />
       </div>
 
       <div className="w-full h-screen pt-16 flex flex-col md:flex-row font-sans text-sm bg-gray-50">

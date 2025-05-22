@@ -74,9 +74,7 @@ const MainContent = ({ isSidebarOpen }) => {
                         ? "text-green-500"
                         : "text-red-500"
                     }`}
-                  >
-                    {stat.change} from yesterday
-                  </p>
+                  ></p>
                 </div>
                 <span className="text-2xl">{stat.icon}</span>
               </div>

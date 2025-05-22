@@ -11,6 +11,7 @@ import CustomersPage from "./pages/CustomersPage";
 import SellingPage from "./pages/sellProductPage/SellingPage";
 import SoldProductsPage from "./pages/SoldProductsPage/SoldProductsPage";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
+import DueCustomersPage from "./pages/due/DueCustomersPage";
 
 const App = () => {
   return (
@@ -41,6 +42,10 @@ const App = () => {
             <Route
               path="/dashboard/soldproducts"
               element={<SoldProductsPage />}
+            ></Route>
+            <Route
+              path="/dashboard/duecustomers"
+              element={<DueCustomersPage />}
             ></Route>
           </Route>
         </Routes>

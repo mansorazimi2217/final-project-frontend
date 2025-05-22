@@ -28,7 +28,12 @@ const Sidebar = ({ isOpen }) => {
             {" "}
             <SidebarItem icon={<FaBoxOpen />} text="Products" />
           </Link>
-          <SidebarItem icon={<FaClockRotateLeft />} text="Remainers" /> 
+          <Link
+            to={"/dashboard/duecustomers"}
+            style={{ textDecoration: "none" }}
+          >
+            <SidebarItem icon={<FaClockRotateLeft />} text="Remainers" />
+          </Link>
           <Link
             style={{ textDecoration: "none" }}
             to={"/dashboard/soldproducts"}

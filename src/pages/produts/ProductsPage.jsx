@@ -83,11 +83,16 @@ export default function ProductsPage() {
     setUpdateModal(true);
   };
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
   return (
     <div className="min-h-screen p-0 bg-gradient-to-br from-gray-200 to-white-200 ">
       <div className="w-full mx-auto">
-        <Navbar />
-        <Sidebar />
+        <Navbar toggleSidebar={toggleSidebar} />
+        <Sidebar isOpen={isSidebarOpen} />
         <main className="pt-16 md:pl-64 min-h-screen bg-gray-50">
           <ProductsCard
             filteredProducts={filteredProducts}

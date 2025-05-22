@@ -14,7 +14,9 @@ function CustomerTable({
         <table className="min-w-full text-sm">
           <thead className="bg-gray-100">
             <tr>
-              <th className="px-3 py-2 text-left">Customer</th>
+              <th className="px-3 py-2 text-left">Name</th>
+              <th className="px-3 py-2 text-left">ID</th>
+              <th className="px-3 py-2 text-left">Phone Number</th>
               <th className="px-3 py-2 text-left hidden sm:table-cell">
                 Email
               </th>
@@ -41,6 +43,16 @@ function CustomerTable({
                       </div>
                       <span className="truncate max-w-[120px] md:max-w-none">
                         {customer.name}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3 hidden sm:table-cell">
+                      <span className="truncate max-w-[120px] md:max-w-none block">
+                        {customer._id}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3 hidden sm:table-cell">
+                      <span className="truncate max-w-[120px] md:max-w-none block">
+                        {customer.phone}
                       </span>
                     </td>
                     <td className="px-3 py-3 hidden sm:table-cell">

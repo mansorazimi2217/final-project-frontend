@@ -51,6 +51,9 @@ function MainContentSellPage({
 
   useEffect(() => {
     const customer = customers.find((cust) => cust._id === selectedCustomerId);
+    if (customer) {
+      console.log(customer._id + "  check this");
+    }
     setSelectedCustomer(customer || null);
   }, [selectedCustomerId, customers]);
 
@@ -74,22 +77,52 @@ function MainContentSellPage({
 
   const updateCustomerStats = async (customerId) => {
     try {
-      await fetch(`http://localhost:3000/api/customers/${customerId}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          totalSpent: Number(totalPaied),
-          remainVale: Number(totalAmount) - Number(totalPaied),
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/customers/${customerId}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            actionType: "sale", // Explicitly specify this is a sale
+            totalSpent: Number(totalPaied),
+            remainValue: Number(totalAmount) - Number(totalPaied),
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update customer stats");
+      }
+
+      return await response.json();
     } catch (error) {
       console.error("Error updating customer:", error);
       throw error;
     }
   };
+
+  // const updateCustomerStats = async (customerId) => {
+  //   try {
+  //     await fetch(`http://localhost:3000/api/customers/${customerId}`, {
+  //       method: "PATCH",
+  //       headers: {
+  //         Authorization: `Bearer ${user.token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         totalSpent: Number(totalPaied),
+  //         remainVale: Number(totalAmount) - Number(totalPaied),
+  //       }),
+  //     });
+  //   } catch (error) {
+  //     console.error("Error updating customer:", error);
+  //     throw error;
+  //   }
+  // };
 
   const generatePDF = ({
     cartItems,
@@ -184,14 +217,14 @@ function MainContentSellPage({
 
     try {
       const billPayload = {
+        customerId:
+          customerType === "permanent" ? selectedCustomer?._id : "temporary",
         total: totalAmount,
         totalPaied: Number(totalPaied),
         customerName:
           customerType === "permanent"
             ? selectedCustomer?.name
             : tempCustomerName,
-        customerId:
-          customerType === "permanent" ? selectedCustomer?._id : "temporary",
         sendToBills: customerType === "permanent",
         date: new Date().toISOString(),
         products: cartItems.map((item) => ({
@@ -394,7 +427,7 @@ function MainContentSellPage({
                 <option value="">Select a customer</option>
                 {filteredCustomers.map((cust) => (
                   <option key={cust._id} value={cust._id}>
-                    {cust.name} ({cust.email})
+                    {cust.name} , ({cust.email}) , {cust.phone} , {cust._id}
                   </option>
                 ))}
                 <option value="add_new">➕ Add New Customer</option>
