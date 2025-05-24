@@ -1,5 +1,7 @@
 import React from "react";
 import { ChevronDownIcon } from "lucide-react";
+import { ClipboardCopy, Check } from "lucide-react"; // Add Check icon
+import { useState } from "react";
 function CustomerTable({
   filteredCustomers,
   page,
@@ -8,6 +10,33 @@ function CustomerTable({
   dropdownIndex,
   handleAction,
 }) {
+  function CopyableCustomerId({ id }) {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+      navigator.clipboard.writeText(id);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500); // Reset after 1.5s
+    };
+
+    return (
+      <button
+        onClick={handleCopy}
+        className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition group"
+        title="Click to copy ID"
+      >
+        <span className="truncate max-w-[120px] md:max-w-none block text-left">
+          {id}
+        </span>
+        {copied ? (
+          <Check className="w-4 h-4 text-green-500" />
+        ) : (
+          <ClipboardCopy className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
+        )}
+      </button>
+    );
+  }
+
   return (
     <div>
       <div className="w-full overflow-x-auto">
@@ -46,9 +75,7 @@ function CustomerTable({
                       </span>
                     </td>
                     <td className="px-3 py-3 hidden sm:table-cell">
-                      <span className="truncate max-w-[120px] md:max-w-none block">
-                        {customer._id}
-                      </span>
+                      <CopyableCustomerId id={customer._id} />
                     </td>
                     <td className="px-3 py-3 hidden sm:table-cell">
                       <span className="truncate max-w-[120px] md:max-w-none block">

@@ -20,7 +20,8 @@ const PayDueModal = ({ isOpen, onClose, customer, onPay }) => {
       return;
     }
 
-    onPay(customer._id, pay);
+    console.log(customer);
+    onPay(customer._id, customer.name, customer.remainValue, pay);
     setPayAmount("");
     setError("");
     onClose();
