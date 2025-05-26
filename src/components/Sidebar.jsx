@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FaUserGroup,
   FaBoxOpen,
@@ -8,9 +7,12 @@ import {
   FaArrowTrendUp,
   FaCartShopping,
 } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = ({ isOpen }) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   return (
     <div
       className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-white shadow-lg z-30 transform transition-all duration-300 ease-in-out ${
@@ -19,45 +21,63 @@ const Sidebar = ({ isOpen }) => {
     >
       <nav className="mt-4">
         <ul>
-          <Link style={{ textDecoration: "none" }} to={"/dashboard/customers"}>
-            {" "}
-            <SidebarItem icon={<FaUserGroup />} text="Customers" />{" "}
-          </Link>
-
-          <Link style={{ textDecoration: "none" }} to={"/dashboard/products"}>
-            {" "}
-            <SidebarItem icon={<FaBoxOpen />} text="Products" />
-          </Link>
-          <Link
-            to={"/dashboard/duecustomers"}
-            style={{ textDecoration: "none" }}
-          >
-            <SidebarItem icon={<FaClockRotateLeft />} text="Due Customers" />
-          </Link>
-          <Link
-            style={{ textDecoration: "none" }}
-            to={"/dashboard/soldproducts"}
-          >
-            <SidebarItem icon={<FaSackDollar />} text="Sold reports" />
-          </Link>
-
+          <SidebarLink
+            to="/dashboard/customers"
+            icon={<FaUserGroup />}
+            text="Customers"
+            active={currentPath === "/dashboard/customers"}
+          />
+          <SidebarLink
+            to="/dashboard/products"
+            icon={<FaBoxOpen />}
+            text="Products"
+            active={currentPath === "/dashboard/products"}
+          />
+          <SidebarLink
+            to="/dashboard/duecustomers"
+            icon={<FaClockRotateLeft />}
+            text="Due Customers"
+            active={currentPath === "/dashboard/duecustomers"}
+          />
+          <SidebarLink
+            to="/dashboard/soldproducts"
+            icon={<FaSackDollar />}
+            text="Sold reports"
+            active={currentPath === "/dashboard/soldproducts"}
+          />
           <SidebarItem icon={<FaArrowTrendUp />} text="Earning Reports" />
           <SidebarItem icon={<FaReceipt />} text="Expensis" />
-          <Link
-            style={{ textDecoration: "none" }}
-            to={"/dashboard/sellingpage"}
-          >
-            <SidebarItem icon={<FaCartShopping />} text="Sell Products" />
-          </Link>
+          <SidebarLink
+            to="/dashboard/sellingpage"
+            icon={<FaCartShopping />}
+            text="Sell Products"
+            active={currentPath === "/dashboard/sellingpage"}
+          />
         </ul>
       </nav>
     </div>
   );
 };
 
-const SidebarItem = ({ icon, text }) => {
+const SidebarLink = ({ to, icon, text, active }) => {
   return (
-    <div className="flex items-center gap-3 text-gray-600 hover:text-[#006EBD] transition-colors duration-200 cursor-pointer px-4 py-2 rounded-lg hover:bg-[#f0f8ff] active:scale-95 mr-3">
+    <Link to={to} style={{ textDecoration: "none" }}>
+      <SidebarItem icon={icon} text={text} active={active} />
+    </Link>
+  );
+};
+
+const SidebarItem = ({ icon, text, active }) => {
+  return (
+    <div
+      className={`flex items-center gap-3 px-4 py-2 mr-3 rounded-lg cursor-pointer transition-colors duration-200
+        ${
+          active
+            ? "bg-[#e6f3ff] text-[#006EBD]"
+            : "text-gray-600 hover:text-[#006EBD] hover:bg-[#f0f8ff]"
+        }
+        active:scale-95`}
+    >
       {icon}
       <span className="font-medium">{text}</span>
     </div>

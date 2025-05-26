@@ -105,25 +105,6 @@ function MainContentSellPage({
     }
   };
 
-  // const updateCustomerStats = async (customerId) => {
-  //   try {
-  //     await fetch(`http://localhost:3000/api/customers/${customerId}`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         Authorization: `Bearer ${user.token}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         totalSpent: Number(totalPaied),
-  //         remainVale: Number(totalAmount) - Number(totalPaied),
-  //       }),
-  //     });
-  //   } catch (error) {
-  //     console.error("Error updating customer:", error);
-  //     throw error;
-  //   }
-  // };
-
   const generatePDF = ({
     cartItems,
     totalAmount,

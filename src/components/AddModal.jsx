@@ -116,7 +116,50 @@ const AddModal = ({ setAddModal }) => {
               />
             </div>
 
-            <input
+            <select
+              className="border border-red-500 p-2 rounded-xl"
+              style={{
+                backgroundColor: emptFeilds.includes("category") ? "pink" : "",
+              }}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="" disabled>
+                {emptFeilds.includes("category")
+                  ? "Category is required"
+                  : "Select Category"}
+              </option>
+              <option value="Fashion & Apparel">Fashion & Apparel</option>
+              <option value="Electronics & Gadgets">
+                Electronics & Gadgets
+              </option>
+              <option value="Home & Kitchen">Home & Kitchen</option>
+              <option value="Food & Beverages">Food & Beverages</option>
+              <option value="Health & Personal Care">
+                Health & Personal Care
+              </option>
+              <option value="Baby & Kids">Baby & Kids</option>
+              <option value="Automotive">Automotive</option>
+              <option value="Pet Supplies">Pet Supplies</option>
+              <option value="Sports & Fitness">Sports & Fitness</option>
+              <option value="Arts, Crafts & Stationery">
+                Arts, Crafts & Stationery
+              </option>
+              <option value="Books & Media">Books & Media</option>
+              <option value="Beauty & Cosmetics">Beauty & Cosmetics</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Tools & Industrial">Tools & Industrial</option>
+              <option value="Travel & Outdoors">Travel & Outdoors</option>
+              <option value="Jewelry & Accessories">
+                Jewelry & Accessories
+              </option>
+              <option value="Toys & Games">Toys & Games</option>
+              <option value="Office Supplies">Office Supplies</option>
+              <option value="Grocery & Essentials">Grocery & Essentials</option>
+              <option value="Footwear">Footwear</option>
+            </select>
+
+            {/* <input
               className={"border border-red-500 p-2 rounded-xl"}
               placeholder={
                 emptFeilds.includes("category")
@@ -128,7 +171,7 @@ const AddModal = ({ setAddModal }) => {
               }}
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-            />
+            /> */}
 
             <input
               className={"border p-2 rounded-xl"}
@@ -145,14 +188,6 @@ const AddModal = ({ setAddModal }) => {
               onChange={(e) => setQuantity(e.target.value)}
               type="number"
             />
-
-            {/* <input
-              className="border p-2 rounded-xl"
-              placeholder="Image URL"
-              onChange={(e) => setImg(e.target.value)}
-              type="file"
-              value={img}
-            /> */}
 
             <input
               className="border p-2 rounded-xl"
@@ -185,7 +220,7 @@ const AddModal = ({ setAddModal }) => {
                 <input
                   type="number"
                   className={
-                    "border border-gray-300 p-2 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    "border border-gray-300 p-2  rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   }
                   // placeholder="Selling Price"
                   placeholder={
@@ -229,9 +264,6 @@ const AddModal = ({ setAddModal }) => {
                   onChange={(e) => setCurrency(e.target.value)}
                 >
                   <option value="$">$</option>
-                  <option value="AFG">AFG</option>
-                  <option value="€">€</option>
-                  <option value="£">£</option>
                 </select>
               </div>
             </div>
