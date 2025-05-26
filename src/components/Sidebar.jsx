@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen }) => {
             to={"/dashboard/duecustomers"}
             style={{ textDecoration: "none" }}
           >
-            <SidebarItem icon={<FaClockRotateLeft />} text="Remainers" />
+            <SidebarItem icon={<FaClockRotateLeft />} text="Due Customers" />
           </Link>
           <Link
             style={{ textDecoration: "none" }}

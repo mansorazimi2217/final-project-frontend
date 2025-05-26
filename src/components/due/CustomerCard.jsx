@@ -1,95 +1,167 @@
-import { Phone, Mail } from "lucide-react";
-import { Copy, Check } from "lucide-react";
-import { Avatar } from "./DueMainContent";
 import { useState } from "react";
+import emailjs, { send } from "emailjs-com";
+import EmailSendModal from "./EmailSendModal";
+import Customer_Card from "./Customer_Card";
 
 const CustomerCard = ({ customer, onPayDue }) => {
+  // State management
   const [copied, setCopied] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailContent, setEmailContent] = useState(
+    `Dear ${
+      customer.name
+    }, you have an unpaid balance of $${customer.remainValue?.toFixed(
+      2
+    )} from your last purchase on ${new Date(
+      customer.lastPurchaseAt
+    ).toLocaleDateString()}. Please clear your payment within 7 days. Thank you!`
+  );
+  const [isPersian, setIsPersian] = useState(false);
+  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [sendStatus, setSendStatus] = useState(null);
+
+  // Initialize EmailJS
+  emailjs.init("YOUR_EMAILJS_USER_ID"); // Replace with your actual EmailJS user ID
+
+  // Translation content
+  const translations = {
+    en: {
+      template: `Dear ${
+        customer.name
+      }, you have an unpaid balance of $${customer.remainValue?.toFixed(
+        2
+      )} from your last purchase on ${new Date(
+        customer.lastPurchaseAt
+      ).toLocaleDateString()}. Please clear your payment within 7 days. Thank you!`,
+      subject: "Payment Reminder",
+      labels: {
+        customer: "Customer",
+        phone: "Phone",
+        date: "Date",
+        message: "Message",
+        cancel: "Cancel",
+        send: "Send Message",
+        language: "Language",
+      },
+      status: {
+        sending: "Sending...",
+        success: "Email sent successfully!",
+        error: "Failed to send email. Please try again.",
+      },
+    },
+    fa: {
+      template: `جناب ${
+        customer.name
+      }، شما مبلغ پرداخت نشده ${customer.remainValue?.toFixed(
+        2
+      )} دلار از خرید مورخ ${new Date(
+        customer.lastPurchaseAt
+      ).toLocaleDateString(
+        "fa-IR"
+      )} دارید. لطفاً ظرف 7 روز پرداخت خود را انجام دهید. با تشکر!`,
+      subject: "یادآوری پرداخت",
+      labels: {
+        customer: "مشتری",
+        phone: "تلفن",
+        date: "تاریخ",
+        message: "پیام",
+        cancel: "انصراف",
+        send: "ارسال پیام",
+        language: "زبان",
+      },
+      status: {
+        sending: "در حال ارسال...",
+        success: "ایمیل با موفقیت ارسال شد!",
+        error: "ارسال ایمیل ناموفق بود. لطفاً مجدداً تلاش کنید.",
+      },
+    },
+  };
+
+  // Handle sending email
+  emailjs.init("jY1tG4Em1ASbrORVp");
+
+  const handleSendEmail = async () => {
+    setIsSending(true);
+    setSendStatus(null);
+
+    try {
+      const response = await emailjs.send(
+        "service_uwve17l",
+        "template_gwq7ymd",
+        {
+          to_name: customer.name,
+          to_email: customer.email,
+          from_name: "Digital Store",
+          message: isPersian ? translations.fa.template : emailContent,
+          subject: isPersian
+            ? translations.fa.subject
+            : translations.en.subject,
+          due_amount: customer.remainValue?.toFixed(2),
+          due_date: new Date().toLocaleDateString(
+            isPersian ? "fa-IR" : undefined
+          ),
+        }
+      );
+
+      console.log(customer.email);
+      console.log(response);
+
+      setSendStatus({
+        success: true,
+        message: isPersian
+          ? translations.fa.status.success
+          : translations.en.status.success,
+      });
+      setTimeout(() => {
+        setShowEmailModal(false);
+        setIsSending(false);
+      }, 1500);
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      setSendStatus({
+        success: false,
+        message: isPersian
+          ? translations.fa.status.error
+          : translations.en.status.error,
+      });
+      setIsSending(false);
+    }
+  };
+
+  // Handle language change
+  const handleLanguageChange = (language) => {
+    setIsPersian(language === "fa");
+    setEmailContent(translations[language].template);
+    setShowLanguageDropdown(false);
+  };
+
   return (
     <>
-      <div className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center hover:shadow-lg transition-shadow duration-200">
-        <Avatar name={customer.name} />
-        <h3 className="mt-3 text-lg font-semibold">{customer.name}</h3>
-        <div
-          className="text-xs text-gray-500 flex items-center space-x-1 mt-1 cursor-pointer hover:underline"
-          title="Click to copy ID"
-          onClick={() => {
-            navigator.clipboard.writeText(customer._id);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000); // reset after 2s
-          }}
-        >
-          <span>
-            <span className="text-blue-600">id : </span> {customer._id}
-          </span>
-          {copied ? (
-            <Check className="w-4 h-4 text-green-500" />
-          ) : (
-            <Copy className="w-4 h-4 text-gray-400 hover:text-gray-600" />
-          )}
-        </div>
+      {/* Customer Card */}
+      <Customer_Card
+        customer={customer}
+        copied={copied}
+        onPayDue={onPayDue}
+        setShowEmailModal={setShowEmailModal}
+        setCopied={setCopied}
+      />
 
-        <div className="flex space-x-6 mb-3 mt-3 text-[#006EBD]">
-          <a href={`tel:${customer.phone}`} title="Call customer">
-            <Phone className="w-6 h-6 hover:text-[#0059a0]" />
-          </a>
-          <a href={`mailto:${customer.email}`} title="Email customer">
-            <Mail className="w-6 h-6 hover:text-[#0059a0]" />
-          </a>
-        </div>
-
-        <div className="w-full border-t border-gray-200 mb-4"></div>
-
-        <div className="w-full text-[15px] text-gray-700 space-y-2">
-          {/* <div className="flex justify-between px-2">
-        <span className="font-medium">🆔 Id</span>
-        <span>{customer._id}</span>
-      </div> */}
-          <div className="flex justify-between px-2">
-            <span className="font-medium">📞 Phone</span>
-            <span>{customer.phone}</span>
-          </div>
-          <div className="flex justify-between px-2">
-            <span className="font-medium">📧 Email</span>
-            <span>{customer.email}</span>
-          </div>
-          <div className="flex justify-between px-2">
-            <span className="font-medium">🏠 Address</span>
-            <span className="text-right">{customer.address}</span>
-          </div>
-          <div className="flex justify-between px-2">
-            <span className="font-medium">🛒 Total Orders</span>
-            <span>{customer.totalOrders}</span>
-          </div>
-          <div className="flex justify-between px-2">
-            <span className="font-medium">💰 Amount Due</span>
-            <span className="text-red-500 font-semibold">
-              ${customer.remainValue?.toFixed(2) || "0.00"}
-            </span>
-          </div>
-          <div className="flex justify-between px-2">
-            <span className="font-medium">💵 Total Spent</span>
-            <span>${customer.totalSpent?.toFixed(2) || "0.00"}</span>
-          </div>
-          <div className="flex justify-between px-2">
-            <span className="font-medium">🗓 Last Purchase</span>
-            <span>
-              {customer.lastPurchaseAt
-                ? new Date(customer.lastPurchaseAt).toLocaleDateString()
-                : "Never"}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex mt-5">
-          <button
-            onClick={onPayDue}
-            className="bg-[#006EBD] text-white px-4 py-2 rounded hover:bg-[#0059a0] transition-colors"
-          >
-            Pay Due
-          </button>
-        </div>
-      </div>
+      {showEmailModal && (
+        <EmailSendModal
+          isPersian={isPersian}
+          translations={translations}
+          setShowEmailModal={setShowEmailModal}
+          customer={customer}
+          showLanguageDropdown={showLanguageDropdown}
+          setShowLanguageDropdown={setShowLanguageDropdown}
+          handleLanguageChange={handleLanguageChange}
+          handleSendEmail={handleSendEmail}
+          isSending={isSending}
+          emailContent={emailContent}
+          sendStatus={sendStatus}
+        />
+      )}
     </>
   );
 };
