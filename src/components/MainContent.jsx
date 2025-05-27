@@ -1,60 +1,111 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuthContext } from "../hooks/useAuthContext";
+import EarningReportPage from "./EarningReport";
 
 const MainContent = ({ isSidebarOpen }) => {
-  const stats = [
+  const { user } = useAuthContext();
+  const [stats, setStats] = useState([
     { title: "Total Customers", value: "0", change: "0%", icon: "👥" },
-    { title: "Total Sells", value: "0", change: "0%", icon: "💰" },
-    { title: "Conversion", value: "0", change: "0%", icon: "📊" },
-  ];
+    { title: "Total products", value: "0", change: "0%", icon: "📦" },
+  ]);
+  const [lowQuantityStock, setLowQuantityStock] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const recentActivities = [
-    { user: "Name", action: "0", time: "0", price: "0" },
-    { user: "Name", action: "0", time: "0", price: "0" },
-    { user: "Name", action: "0", time: "0", price: "0" },
-    { user: "Name", action: "0", time: "0", price: "0" },
+  const [recentActivities, setRecentActivities] = useState();
 
-    { user: "Name", action: "0", time: "0", price: "0" },
-    { user: "Name", action: "0", time: "0", price: "0" },
-    { user: "Name", action: "0", time: "0", price: "0" },
-    { user: "Name", action: "0", time: "0", price: "0" },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
-  const lowQuantityStock = [
-    {
-      name: "Wireless Headphones",
-      category: "Electronics",
-      quantity: 0,
-      threshold: 0,
-    },
-    {
-      name: "Organic Coffee Beans",
-      category: "Groceries",
-      quantity: 0,
-      threshold: 0,
-    },
-    { name: "Yoga Mat", category: "Fitness", quantity: 0, threshold: 0 },
-    { name: "Ceramic Mugs", category: "Kitchen", quantity: 0, threshold: 0 },
-    {
-      name: "Bluetooth Speaker",
-      category: "Electronics",
-      quantity: 0,
-      threshold: 0,
-    },
-    {
-      name: "Notebook Set",
-      category: "Stationery",
-      quantity: 0,
-      threshold: 0,
-    },
-  ];
+        // Fetch customers data
+        const customersRes = await axios.get(
+          "http://localhost:3000/api/customers/",
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
+        );
+        const totalCustomers = customersRes.data.length;
+
+        // Fetch products data
+        const productsRes = await axios.get(
+          "http://localhost:3000/api/products/",
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
+        );
+        const totalProducts = productsRes.data.length;
+        const products = productsRes.data;
+        // Find low quantity products (quantity < 10)
+        const lowQuantityProducts = productsRes.data
+          .filter((product) => product.quantity < 10)
+          .map((product) => ({
+            name: product.name,
+            category: product.category,
+            quantity: product.quantity,
+          }));
+
+        const sortedBySales = [...products]
+          .filter((product) => product.totalSold > 0) // Exclude those with totalSold = 0 or falsy
+          .sort((a, b) => b.totalSold - a.totalSold)
+          .slice(0, 10) // Limit to top 10
+          .map((product) => ({
+            user: product.name,
+            action: product.totalSold,
+            time: product.quantity, // Remaining stock
+            price: product.selling_price || 0,
+          }));
+
+        // Update state
+        setStats([
+          {
+            title: "Total Customers",
+            value: totalCustomers.toString(),
+            change: "0%",
+            icon: "👥",
+          },
+          {
+            title: "Total products",
+            value: totalProducts.toString(),
+            change: "0%",
+            icon: "📦",
+          },
+        ]);
+
+        setRecentActivities(sortedBySales);
+        setLowQuantityStock(lowQuantityProducts);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Failed to load data");
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
+  if (error) return <div className="text-red-500 p-8">{error}</div>;
+
   return (
     <div
       className={`pt-16 px-4 md:px-8 transition-all duration-300 ${
         isSidebarOpen ? "ml-0 md:ml-64" : "ml-0"
       }`}
     >
+      <EarningReportPage />
       <div className="py-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
           {stats.map((stat, index) => (
             <div
               key={index}
@@ -88,10 +139,8 @@ const MainContent = ({ isSidebarOpen }) => {
               Top Selling Stock
             </h2>
             <div className="overflow-x-auto" style={{ maxHeight: "300px" }}>
-              {" "}
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50 sticky top-0">
-                  {" "}
                   <tr>
                     <th
                       scope="col"
@@ -179,6 +228,11 @@ const MainContent = ({ isSidebarOpen }) => {
                     </div>
                   </div>
                 ))}
+                {lowQuantityStock.length === 0 && (
+                  <div className="text-center py-4 text-gray-500">
+                    No low quantity products
+                  </div>
+                )}
               </div>
             </div>
           </div>

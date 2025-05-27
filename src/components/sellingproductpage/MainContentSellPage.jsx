@@ -211,6 +211,7 @@ function MainContentSellPage({
         products: cartItems.map((item) => ({
           name: item.name,
           quantity: item.quantity,
+          buyPrice: item.buyPrice,
           price: item.price,
           total: item.total,
           image: item.image,

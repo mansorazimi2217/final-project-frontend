@@ -11,6 +11,7 @@ const SellingPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [formData, setFormData] = useState({
     id: "",
+    buyPrice: "",
     price: "",
     name: "",
     quantity: "",
@@ -51,6 +52,7 @@ const SellingPage = () => {
           id: item._id,
           name: item.name,
           stock: item.quantity,
+          buyPrice: Number(item.buy_price),
           price: Number(item.selling_price),
           company: item.brand,
           image: item.img
@@ -83,6 +85,7 @@ const SellingPage = () => {
   const handleProductClick = (product) => {
     setFormData({
       id: product.id,
+      buyPrice: product.buyPrice,
       price: product.price,
       name: product.name,
       quantity: "",

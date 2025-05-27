@@ -304,8 +304,6 @@ const AddModal = ({ setAddModal }) => {
 
             <textarea
               className="border p-2 rounded-xl md:col-span-2"
-              // className="border p-2 rounded-xl md:col-span-2"
-              // placeholder="Description"
               placeholder={
                 emptFeilds.includes("desc")
                   ? "Description is required"
