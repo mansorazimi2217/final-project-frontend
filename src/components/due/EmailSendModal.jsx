@@ -1,5 +1,6 @@
 import { Mail, Languages, ChevronDown, Loader2 } from "lucide-react";
 function EmailSendModal({
+  isPashto,
   isPersian,
   translations,
   setShowEmailModal,
@@ -19,7 +20,11 @@ function EmailSendModal({
           {/* Modal Header */}
           <div className="bg-gradient-to-r from-[#006EBD] to-[#006EBD] p-4 flex justify-between items-center">
             <h3 className="text-white font-bold text-lg">
-              {isPersian ? translations.fa.subject : translations.en.subject}
+              {isPersian
+                ? translations.fa.subject
+                : isPashto
+                ? translations.pa.subject
+                : translations.en.subject}
             </h3>
             <button
               onClick={() => !isSending && setShowEmailModal(false)}
@@ -41,7 +46,12 @@ function EmailSendModal({
               <div className="text-left">
                 <h4 className="font-semibold">{customer.name}</h4>
                 <p className="text-sm text-gray-500">
-                  {isPersian ? "مبلغ پرداخت نشده:" : "Unpaid:"} $
+                  {/* {isPersian ? "مبلغ پرداخت نشده:" : "Unpaid:"} $ */}
+                  {isPersian
+                    ? "مبلغ پرداخت نشده:"
+                    : isPashto
+                    ? "نه ورکړل شوې اندازه:"
+                    : "Unpaid"}
                   {customer.remainValue?.toFixed(2)}
                 </p>
               </div>
@@ -52,6 +62,8 @@ function EmailSendModal({
                 <span className="text-gray-500">
                   {isPersian
                     ? translations.fa.labels.phone
+                    : isPashto
+                    ? translations.pa.labels.phone
                     : translations.en.labels.phone}
                   :
                 </span>{" "}
@@ -61,6 +73,8 @@ function EmailSendModal({
                 <span className="text-gray-500">
                   {isPersian
                     ? translations.fa.labels.date
+                    : isPashto
+                    ? translations.pa.labels.date
                     : translations.en.labels.date}
                   :
                 </span>{" "}
@@ -78,6 +92,8 @@ function EmailSendModal({
               <label className="text-sm font-medium text-gray-700">
                 {isPersian
                   ? translations.fa.labels.message
+                  : isPashto
+                  ? translations.pa.labels.message
                   : translations.en.labels.message}
               </label>
               <div className="relative">
@@ -93,6 +109,8 @@ function EmailSendModal({
                   <Languages className="w-3 h-3 mr-1" />
                   {isPersian
                     ? translations.fa.labels.language
+                    : isPashto
+                    ? translations.pa.labels.language
                     : translations.en.labels.language}
                   <ChevronDown
                     className="w-3 h-3 ml-1 transition-transform"
@@ -118,6 +136,13 @@ function EmailSendModal({
                       dir="rtl"
                     >
                       فارسی
+                    </button>
+                    <button
+                      onClick={() => handleLanguageChange("pa")}
+                      className="block w-full text-left px-4 py-2 text-sm hover:bg-blue-50"
+                      dir="rtl"
+                    >
+                      پښتو
                     </button>
                   </div>
                 )}
@@ -159,6 +184,8 @@ function EmailSendModal({
             >
               {isPersian
                 ? translations.fa.labels.cancel
+                : isPashto
+                ? translations.pa.labels.cancel
                 : translations.en.labels.cancel}
             </button>
             <button
@@ -170,14 +197,18 @@ function EmailSendModal({
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   {isPersian
-                    ? translations.fa.status.sending
-                    : translations.en.status.sending}
+                    ? translations.fa.labels.sending
+                    : isPashto
+                    ? translations.pa.labels.sending
+                    : translations.en.labels.sending}
                 </>
               ) : (
                 <>
                   <Mail className="w-4 h-4 mr-2" />
                   {isPersian
                     ? translations.fa.labels.send
+                    : isPashto
+                    ? translations.pa.labels.send
                     : translations.en.labels.send}
                 </>
               )}

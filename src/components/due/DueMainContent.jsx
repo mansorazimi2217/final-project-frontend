@@ -359,21 +359,13 @@ export default function DueCustomersPage() {
     }
   };
 
-  // const filteredCustomers = customers.filter((customer) => {
-  //   const searchLower = searchTerm.toLowerCase();
-  //   return (
-  //     customer.name?.toLowerCase().includes(searchLower) ||
-  //     customer.email?.toLowerCase().includes(searchLower) ||
-  //     customer.phone?.includes(searchTerm)
-  //   );
-  // });
   const filteredCustomers = customers.filter((customer) => {
     const searchLower = searchTerm.toLowerCase();
     return (
       customer.name?.toLowerCase().includes(searchLower) ||
       customer.email?.toLowerCase().includes(searchLower) ||
       customer.phone?.includes(searchTerm) ||
-      customer._id?.toLowerCase().includes(searchLower) // ✅ Added this line
+      customer._id?.toLowerCase().includes(searchLower)
     );
   });
 

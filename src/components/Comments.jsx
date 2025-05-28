@@ -1,12 +1,37 @@
 import React from "react";
 import img from "../assets/regsiter.jpg";
 import "./Comments.css";
+import { Link } from "react-router-dom";
 const Comments = () => {
   return (
-    <div className="bg-gray-100 w-full flex flex-col items-center pt-12 pb-20 px-4 sm:px-6 lg:px-8 gap-10 text-center">
-      <div className="mb-10 max-w-3xl mx-auto">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">
-          What people are saying about us
+    <div
+      className="bg-gray-100 w-full flex flex-col items-center pt-12 pb-20 px-4 sm:px-6 lg:px-8 gap-10 text-center"
+      id="comments"
+    >
+      <div className="container mx-auto px-6 text-center flex justify-center items-center">
+        <h1
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
+          className="font-extrabold text-3xl md:text-4xl lg:text-5xl text-[#006EBD] leading-tight flex items-center gap-3 cursor-default select-none"
+        >
+          <svg
+            className="w-7 h-7 text-[#006EBD] animate-pulse"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path d="M12 2C8 7 3 9 3 13a5 5 0 0010 0c0-4-1-7-1-11zM12 22c4-5 9-7 9-11a5 5 0 00-10 0c0 4 1 7 1 11z" />
+          </svg>
+          Comments
+          <svg
+            className="w-7 h-7 text-[#006EBD] animate-pulse"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path d="M12 2C8 7 3 9 3 13a5 5 0 0010 0c0-4-1-7-1-11zM12 22c4-5 9-7 9-11a5 5 0 00-10 0c0 4 1 7 1 11z" />
+          </svg>
         </h1>
       </div>
 
@@ -64,6 +89,14 @@ const Comments = () => {
           <p className="text-gray-600 mb-1">Online Seller</p>
           <p className="text-sm text-gray-500">Herat, Afghanistan</p>
         </div>
+      </div>
+      <div className="text-center">
+        <Link
+          to="/register"
+          className="inline-block bg-[#006EBD] hover:bg-[#006EBD] text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors duration-300"
+        >
+          Get Started
+        </Link>
       </div>
     </div>
   );

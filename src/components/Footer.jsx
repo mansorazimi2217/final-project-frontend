@@ -10,7 +10,10 @@ import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-gray-900 text-white pt-12 pb-6 px-4 sm:px-6 lg:px-8">
+    <footer
+      className="w-full bg-[#004C7A] text-white pt-12 pb-6 px-4 sm:px-6 lg:px-8"
+      id="footer"
+    >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           <div className="space-y-4">
@@ -150,9 +153,7 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
                 <MdLocationOn className="text-blue-400 mt-1 flex-shrink-0" />
-                <p className="text-gray-300">
-                  123 Business Ave, Suite 500, Kabul , KA 10001
-                </p>
+                <p className="text-gray-300">Kabul Afghanistan</p>
               </div>
               <div className="flex items-center space-x-3">
                 <MdEmail className="text-blue-400" />
@@ -178,7 +179,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-700">
           <div className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} OIMS by Doogle. All rights reserved.
+            © {new Date().getFullYear()} OIMS . All rights reserved.
           </div>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <a

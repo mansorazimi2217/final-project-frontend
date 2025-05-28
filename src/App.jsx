@@ -13,6 +13,7 @@ import SoldProductsPage from "./pages/SoldProductsPage/SoldProductsPage";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import DueCustomersPage from "./pages/due/DueCustomersPage";
 import ShowReturnDues from "./pages/due/ShowReturnDues";
+import "./App.css";
 
 const App = () => {
   return (

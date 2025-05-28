@@ -17,6 +17,7 @@ const CustomerCard = ({ customer, onPayDue }) => {
     ).toLocaleDateString()}. Please clear your payment within 7 days. Thank you!`
   );
   const [isPersian, setIsPersian] = useState(false);
+  const [isPashto, setIsPashto] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [sendStatus, setSendStatus] = useState(null);
@@ -76,6 +77,32 @@ const CustomerCard = ({ customer, onPayDue }) => {
         error: "ارسال ایمیل ناموفق بود. لطفاً مجدداً تلاش کنید.",
       },
     },
+    pa: {
+      template: `ښاغلیه ${
+        customer.name
+      }،تاته پیسې نه دي ورکړل شوي.${customer.remainValue?.toFixed(
+        2
+      )} د پیرود نیټې څخه ډالر ${new Date(
+        customer.lastPurchaseAt
+      ).toLocaleDateString(
+        "fa-IR"
+      )}تاسو لرئ. مهرباني وکړئ خپل پیسې په ۷ ورځو کې ورکړئ. مننه!`,
+      subject: "د تادیې یادونه",
+      labels: {
+        customer: "پېرودونکی",
+        phone: "ټیلیفون",
+        date: "تاریخ",
+        message: "پیغام",
+        cancel: "لغوه کول",
+        send: "پیغام واستوئ",
+        language: "ژبه",
+      },
+      status: {
+        sending: "لیږل...",
+        success: "برېښنالیک په بریالیتوب سره واستول شو!",
+        error: "د برېښنالیک لیږل ناکام شول. مهرباني وکړئ بیا هڅه وکړئ.",
+      },
+    },
   };
 
   // Handle sending email
@@ -131,11 +158,23 @@ const CustomerCard = ({ customer, onPayDue }) => {
 
   // Handle language change
   const handleLanguageChange = (language) => {
-    setIsPersian(language === "fa");
-    setEmailContent(translations[language].template);
-    setShowLanguageDropdown(false);
+    console.log(language);
+    if (language === "fa") {
+      setIsPersian("fa");
+      setEmailContent(translations[language].template);
+      setShowLanguageDropdown(false);
+    } else if (language === "pa") {
+      setIsPersian(false);
+      setIsPashto("pa");
+      setEmailContent(translations[language].template);
+      setShowLanguageDropdown(false);
+    } else {
+      setIsPashto(false);
+      setIsPersian(false);
+      setEmailContent(translations[language].template);
+      setShowLanguageDropdown(false);
+    }
   };
-
   return (
     <>
       {/* Customer Card */}
@@ -150,6 +189,7 @@ const CustomerCard = ({ customer, onPayDue }) => {
       {showEmailModal && (
         <EmailSendModal
           isPersian={isPersian}
+          isPashto={isPashto}
           translations={translations}
           setShowEmailModal={setShowEmailModal}
           customer={customer}
