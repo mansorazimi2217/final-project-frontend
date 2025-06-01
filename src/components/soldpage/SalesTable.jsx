@@ -170,13 +170,13 @@ function ProductRow({ product }) {
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        Rs {product.price.toLocaleString()}
+        {product.price.toLocaleString()}$
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
         {product.quantity}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-        Rs {product.total.toLocaleString()}
+        {product.total.toLocaleString()}$
       </td>
     </motion.tr>
   );

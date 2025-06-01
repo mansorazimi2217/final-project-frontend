@@ -14,6 +14,7 @@ import ProtectedRoutes from "./utils/ProtectedRoutes";
 import DueCustomersPage from "./pages/due/DueCustomersPage";
 import ShowReturnDues from "./pages/due/ShowReturnDues";
 import "./App.css";
+import EarningReportPage from "./pages/earning/EarningReportsPage";
 
 const App = () => {
   return (
@@ -52,6 +53,10 @@ const App = () => {
             <Route
               path="/dashboard/duecustomers/return"
               element={<ShowReturnDues />}
+            ></Route>
+            <Route
+              path="/dashboard/earningreport"
+              element={<EarningReportPage />}
             ></Route>
           </Route>
         </Routes>
