@@ -51,7 +51,18 @@ const Sidebar = ({ isOpen }) => {
             text="Earning Report"
             active={currentPath === "/dashboard/earningreport"}
           />
-          <SidebarItem icon={<FaReceipt />} text="Expensis" />
+          {/* <SidebarItem
+            to="/dashboard/expenses"
+            icon={<FaReceipt />}
+            text="Expensis"
+            active={currentPath === "/dashboard/expenses"}
+          /> */}
+          <SidebarLink
+            to="/dashboard/expenses"
+            icon={<FaReceipt />}
+            text="Expensis"
+            active={currentPath === "/dashboard/expenses"}
+          />
           <SidebarLink
             to="/dashboard/sellingpage"
             icon={<FaCartShopping />}

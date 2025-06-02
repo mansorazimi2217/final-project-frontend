@@ -15,7 +15,8 @@ import DueCustomersPage from "./pages/due/DueCustomersPage";
 import ShowReturnDues from "./pages/due/ShowReturnDues";
 import "./App.css";
 import EarningReportPage from "./pages/earning/EarningReportsPage";
-
+import ExpensesPage from "./pages/expenses/ExpensesPage";
+import ExpensesLayout from "./pages/expenses/ExpensesLayout";
 const App = () => {
   return (
     <>
@@ -57,6 +58,10 @@ const App = () => {
             <Route
               path="/dashboard/earningreport"
               element={<EarningReportPage />}
+            ></Route>
+            <Route
+              path="/dashboard/expenses"
+              element={<ExpensesLayout />}
             ></Route>
           </Route>
         </Routes>
