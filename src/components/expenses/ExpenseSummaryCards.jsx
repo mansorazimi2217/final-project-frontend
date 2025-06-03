@@ -24,7 +24,7 @@ const ExpenseSummaryCards = ({ filteredExpenses }) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-2xl shadow-lg text-white transform hover:scale-[1.02] transition-transform">
+      <div className="bg-gradient-to-r from-[#006EBD] to-[#006EBD] p-6 rounded-2xl shadow-lg text-white transform hover:scale-[1.02] transition-transform">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm opacity-80">Total Expenses</p>
