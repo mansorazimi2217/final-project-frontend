@@ -82,8 +82,8 @@ const ExpenseTable = ({ filteredExpenses, categories, onEdit, onDelete }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div className="flex items-center gap-2">
-                      {getPaymentMethodIcon(expense.paidBy)}
-                      {expense.paidBy}
+                      {getPaymentMethodIcon(expense.paymentMethod)}
+                      {expense.paymentMethod}
                     </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">

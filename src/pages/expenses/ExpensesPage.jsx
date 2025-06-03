@@ -1,65 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiPlus, FiDownload } from "react-icons/fi";
-
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import axios from "axios";
 
 import ExpenseSummaryCards from "../../components/expenses/ExpenseSummaryCards";
 import ExpenseFilters from "../../components/expenses/ExpenseFilters";
 import ExpenseTable from "../../components/expenses/ExpenseTable";
 import ExpenseModal from "../../components/expenses/ExpenseModal";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const ExpensesPage = () => {
-  const [expenses, setExpenses] = useState([
-    {
-      id: 1,
-      date: "2025-06-01",
-      category: "Rent",
-      amount: 5000,
-      paidBy: "Bank",
-      notes: "Monthly shop rent payment",
-    },
-    {
-      id: 2,
-      date: "2025-06-02",
-      category: "Inventory",
-      amount: 2000,
-      paidBy: "Cash",
-      notes: "Purchased rice, oil, and spices",
-    },
-    {
-      id: 3,
-      date: "2025-06-03",
-      category: "Utilities",
-      amount: 800,
-      paidBy: "Cash",
-      notes: "Electricity bill for May 2025",
-    },
-    {
-      id: 4,
-      date: "2025-06-05",
-      category: "Inventory",
-      amount: 1500,
-      paidBy: "Cash",
-      notes: "Bought cleaning supplies",
-    },
-    {
-      id: 5,
-      date: "2025-06-10",
-      category: "Marketing",
-      amount: 3000,
-      paidBy: "Bank",
-      notes: "Facebook ads campaign",
-    },
-  ]);
-  // *********
+  const [expenses, setExpenses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { user } = useAuthContext();
   const [filters, setFilters] = useState({
     search: "",
     category: "",
     dateFrom: "",
     dateTo: "",
   });
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchExpenses = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/expenses", {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Failed to fetch expenses");
+        const data = await res.json();
+        setExpenses(data);
+      } catch (err) {
+        console.error(err);
+        setError("Unable to load expenses");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExpenses();
+  }, [user]);
 
   const filterExpenses = () => {
     return expenses.filter((expense) => {
@@ -81,7 +67,7 @@ const ExpensesPage = () => {
       );
     });
   };
-  // *******************
+
   const filteredExpenses = filterExpenses();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -112,15 +98,30 @@ const ExpensesPage = () => {
       )
     );
   };
+  const handleDeleteExpense = async (index) => {
+    const expenseToDelete = expenses[index];
 
-  const handleDeleteExpense = (index) => {
-    const expenseToDelete = expenses.filter((e, i) => i === index)[0];
-    if (
-      window.confirm(
-        `Are you sure you want to delete this expense of $${expenseToDelete.amount} for ${expenseToDelete.category}?`
-      )
-    ) {
-      setExpenses((prev) => prev.filter((e, i) => i !== index));
+    const confirmed = window.confirm(
+      `Are you sure you want to delete this expense of $${expenseToDelete.amount} for ${expenseToDelete.category}?`
+    );
+    if (!confirmed) return;
+
+    try {
+      // Call the DELETE API
+      await axios.delete(
+        `http://localhost:3000/api/expenses/${expenseToDelete._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      // Update local state after successful delete
+      setExpenses((prev) => prev.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error("Failed to delete expense:", error);
+      alert("Failed to delete expense. Please try again.");
     }
   };
 
@@ -139,31 +140,14 @@ const ExpensesPage = () => {
   };
 
   const handleExport = (format) => {
-    const filteredExpenses = expenses.filter((expense) => {
-      const matchesSearch = expense.notes
-        .toLowerCase()
-        .includes(filters.search.toLowerCase());
-      const matchesCategory = filters.category
-        ? expense.category === filters.category
-        : true;
-      const matchesDateFrom = filters.dateFrom
-        ? new Date(expense.date) >= new Date(filters.dateFrom)
-        : true;
-      const matchesDateTo = filters.dateTo
-        ? new Date(expense.date) <= new Date(filters.dateTo)
-        : true;
+    const filtered = filteredExpenses;
 
-      return (
-        matchesSearch && matchesCategory && matchesDateFrom && matchesDateTo
-      );
-    });
-
-    if (filteredExpenses.length === 0) {
+    if (filtered.length === 0) {
       alert("No data to export");
       return;
     }
 
-    const exportData = filteredExpenses.map((expense) => ({
+    const exportData = filtered.map((expense) => ({
       Date: expense.date,
       Category: expense.category,
       Amount: expense.amount,
@@ -191,12 +175,9 @@ const ExpensesPage = () => {
 
   const exportToPDF = (data) => {
     const doc = new jsPDF();
-
-    // Title
     doc.setFontSize(18);
     doc.text("Expense Report", 105, 15, { align: "center" });
 
-    // Filters info
     doc.setFontSize(10);
     let filterText = "All Expenses";
     if (filters.dateFrom || filters.dateTo || filters.category) {
@@ -207,7 +188,6 @@ const ExpensesPage = () => {
     }
     doc.text(filterText, 105, 25, { align: "center" });
 
-    // Table
     const tableData = data.map((item) => [
       item.Date,
       item.Category,
@@ -239,7 +219,6 @@ const ExpensesPage = () => {
       },
     });
 
-    // Total
     const totalAmount = data.reduce((sum, item) => sum + item.Amount, 0);
     doc.setFontSize(10);
     doc.text(
@@ -247,8 +226,6 @@ const ExpensesPage = () => {
       160,
       doc.lastAutoTable.finalY + 10
     );
-
-    // Save the PDF
     doc.save(`expenses_${new Date().toISOString().slice(0, 10)}.pdf`);
   };
 
@@ -320,19 +297,27 @@ const ExpensesPage = () => {
           </div>
         </div>
 
-        <ExpenseFilters
-          filters={filters}
-          setFilters={setFilters}
-          categories={categories}
-        />
+        {loading ? (
+          <p className="text-center text-gray-500">Loading expenses...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : (
+          <>
+            <ExpenseFilters
+              filters={filters}
+              setFilters={setFilters}
+              categories={categories}
+            />
 
-        <ExpenseSummaryCards filteredExpenses={filteredExpenses} />
-        <ExpenseTable
-          filteredExpenses={filteredExpenses}
-          categories={categories}
-          onEdit={handleEditClick}
-          onDelete={handleDeleteExpense}
-        />
+            <ExpenseSummaryCards filteredExpenses={filteredExpenses} />
+            <ExpenseTable
+              filteredExpenses={filteredExpenses}
+              categories={categories}
+              onEdit={handleEditClick}
+              onDelete={handleDeleteExpense}
+            />
+          </>
+        )}
 
         <ExpenseModal
           isOpen={isModalOpen}

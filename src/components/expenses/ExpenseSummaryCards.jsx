@@ -8,10 +8,10 @@ const ExpenseSummaryCards = ({ filteredExpenses }) => {
   const totals = {
     all: filteredExpenses.reduce((sum, e) => sum + e.amount, 0),
     cash: filteredExpenses
-      .filter((e) => e.paidBy === "Cash")
+      .filter((e) => e.paymentMethod === "Cash")
       .reduce((sum, e) => sum + e.amount, 0),
     bank: filteredExpenses
-      .filter((e) => e.paidBy === "Bank")
+      .filter((e) => e.paymentMethod === "Bank")
       .reduce((sum, e) => sum + e.amount, 0),
   };
 
@@ -46,7 +46,10 @@ const ExpenseSummaryCards = ({ filteredExpenses }) => {
             <p className="text-sm opacity-80">Paid by Cash</p>
             <p className="text-2xl font-bold">{formatCurrency(totals.cash)}</p>
             <p className="text-xs mt-1 opacity-80">
-              {filteredExpenses.filter((e) => e.paidBy === "Cash").length}{" "}
+              {
+                filteredExpenses.filter((e) => e.paymentMethod === "Cash")
+                  .length
+              }{" "}
               transactions
             </p>
           </div>
@@ -62,7 +65,10 @@ const ExpenseSummaryCards = ({ filteredExpenses }) => {
             <p className="text-sm opacity-80">Paid by Bank</p>
             <p className="text-2xl font-bold">{formatCurrency(totals.bank)}</p>
             <p className="text-xs mt-1 opacity-80">
-              {filteredExpenses.filter((e) => e.paidBy === "Bank").length}{" "}
+              {
+                filteredExpenses.filter((e) => e.paymentMethod === "Bank")
+                  .length
+              }{" "}
               transactions
             </p>
           </div>
