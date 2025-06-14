@@ -11,7 +11,7 @@ import ExpenseTable from "../../components/expenses/ExpenseTable";
 import ExpenseModal from "../../components/expenses/ExpenseModal";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
-const ExpensesPage = () => {
+const ExpensesPage = (isSidebarOpen) => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -73,14 +73,7 @@ const ExpensesPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentExpense, setCurrentExpense] = useState(null);
 
-  const categories = [
-    "Rent",
-    "Inventory",
-    "Utilities",
-    "Marketing",
-    "Salaries",
-    "Maintenance",
-  ];
+  const categories = ["Rent", "Utilities", "Marketing", "Salaries"];
   const paymentMethods = ["Cash", "Bank"];
 
   const generateId = () => {
@@ -271,7 +264,7 @@ const ExpensesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className={`min-h-screen bg-gray-50 p-4 md:p-8 `}>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <div>

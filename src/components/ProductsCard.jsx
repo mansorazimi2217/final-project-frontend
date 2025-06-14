@@ -81,17 +81,22 @@ function ProductsCard({
               key={product._id}
               className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-101 p-1 flex flex-col relative animate-fadeInSmooth"
             >
-              <img
+              {/* <img
                 src={`http://localhost:3000${product.img}`}
                 alt={product.name}
                 className="w-full h-60 object-cover rounded-xl mb-2 transition duration-300 hover:brightness-90"
+              /> */}
+              <img
+                src={`http://localhost:3000${product.img}`}
+                alt={product.name}
+                className="w-full h-60 object-cover object-center rounded-xl mb-2 transition duration-300 hover:brightness-90"
               />
 
               <div className="p-4 flex flex-col flex-grow">
                 <div className="flex justify-between items-center mb-1">
-                  <h2 className="text-md font-semibold text-gray-700">
+                  <h5 className="text-md font-semibold text-gray-700">
                     {product.name}
-                  </h2>
+                  </h5>
                   <span className="text-sm bg-gray-200 text-gray-600 px-2 py-0.5 rounded">
                     {product.category}
                   </span>

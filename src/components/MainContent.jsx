@@ -38,7 +38,6 @@ const MainContent = ({ isSidebarOpen }) => {
         );
         const totalProducts = productsRes.data.length;
         const products = productsRes.data;
-        // Find low quantity products (quantity < 10)
         const lowQuantityProducts = productsRes.data
           .filter((product) => product.quantity < 10)
           .map((product) => ({

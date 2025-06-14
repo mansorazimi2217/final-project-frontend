@@ -6,6 +6,7 @@ import {
   FaReceipt,
   FaArrowTrendUp,
   FaCartShopping,
+  FaHouse,
 } from "react-icons/fa6";
 import { Link, useLocation } from "react-router-dom";
 
@@ -15,12 +16,18 @@ const Sidebar = ({ isOpen }) => {
 
   return (
     <div
-      className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-white shadow-lg z-30 transform transition-all duration-300 ease-in-out ${
+      className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-white shadow-lg z-30 transform transition-all duration-0 ease-in-out ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } md:translate-x-0`}
     >
       <nav className="mt-4">
         <ul>
+          <SidebarLink
+            to="/dashboard"
+            icon={<FaHouse />}
+            text="Home"
+            active={currentPath === "/dashboard"}
+          />
           <SidebarLink
             to="/dashboard/customers"
             icon={<FaUserGroup />}
@@ -51,12 +58,6 @@ const Sidebar = ({ isOpen }) => {
             text="Earning Report"
             active={currentPath === "/dashboard/earningreport"}
           />
-          {/* <SidebarItem
-            to="/dashboard/expenses"
-            icon={<FaReceipt />}
-            text="Expensis"
-            active={currentPath === "/dashboard/expenses"}
-          /> */}
           <SidebarLink
             to="/dashboard/expenses"
             icon={<FaReceipt />}

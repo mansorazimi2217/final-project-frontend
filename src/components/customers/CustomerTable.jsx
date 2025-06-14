@@ -1,7 +1,6 @@
-import React from "react";
-import { ChevronDownIcon } from "lucide-react";
-import { ClipboardCopy, Check } from "lucide-react"; // Add Check icon
-import { useState } from "react";
+import React, { useState } from "react";
+import { ChevronDownIcon, ClipboardCopy, Check } from "lucide-react";
+
 function CustomerTable({
   filteredCustomers,
   page,
@@ -16,7 +15,7 @@ function CustomerTable({
     const handleCopy = () => {
       navigator.clipboard.writeText(id);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500); // Reset after 1.5s
+      setTimeout(() => setCopied(false), 1500);
     };
 
     return (
@@ -39,7 +38,46 @@ function CustomerTable({
 
   return (
     <div>
-      <div className="w-full overflow-x-auto">
+      {/* Mobile Card Layout */}
+      <div className="sm:hidden space-y-4">
+        {filteredCustomers.length > 0 ? (
+          filteredCustomers
+            .slice((page - 1) * 5, page * 5)
+            .map((customer, index) => (
+              <div
+                key={index}
+                className="border rounded-lg p-4 shadow flex flex-col gap-2"
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-[#006EBD] text-white flex items-center justify-center font-medium text-xs">
+                      {getInitials(customer.name)}
+                    </div>
+                    <div className="font-semibold text-gray-800">
+                      {customer.name}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleAction("details", customer)}
+                    className="text-blue-600 text-sm hover:underline"
+                  >
+                    View
+                  </button>
+                </div>
+                <div className="text-sm text-gray-600">
+                  Phone: {customer.phone || "-"} <br />
+                  Orders: {customer.totalOrders} <br />
+                  Spent: ${customer.totalSpent?.toFixed(2)}
+                </div>
+              </div>
+            ))
+        ) : (
+          <p className="text-center text-gray-500">No customers found</p>
+        )}
+      </div>
+
+      {/* Desktop Table Layout */}
+      <div className="hidden sm:block overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead className="bg-gray-100">
             <tr>
@@ -91,7 +129,9 @@ function CustomerTable({
                       {customer.address}
                     </td>
                     <td className="px-3 py-3">{customer.totalOrders}</td>
-                    <td className="px-3 py-3">{customer.totalSpent}</td>
+                    <td className="px-3 py-3">
+                      ${customer.totalSpent?.toFixed(2)}
+                    </td>
                     <td className="px-3 py-3 relative">
                       <button
                         className="border p-1 rounded-md hover:bg-gray-100"
@@ -127,7 +167,7 @@ function CustomerTable({
                 ))
             ) : (
               <tr>
-                <td colSpan="6" className="px-3 py-4 text-center text-gray-500">
+                <td colSpan="8" className="px-3 py-4 text-center text-gray-500">
                   No customers found
                 </td>
               </tr>

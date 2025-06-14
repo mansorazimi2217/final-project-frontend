@@ -51,7 +51,7 @@ export default function EarningReport() {
       try {
         const response = await fetch("http://localhost:3000/api/bills/", {
           headers: {
-            Authorization: `Bearer ${user.token}`, // Assuming you store token in localStorage
+            Authorization: `Bearer ${user.token}`,
             "Content-Type": "application/json",
           },
         });
@@ -70,8 +70,10 @@ export default function EarningReport() {
       }
     };
 
-    fetchData();
-  }, []);
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

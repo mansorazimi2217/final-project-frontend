@@ -196,7 +196,11 @@ const SellingPage = () => {
   return (
     <>
       <div className="fixed top-0 left-0 w-full z-50 h-16">
-        <Navbar toggleSidebar={toggleSidebar} checkForSellPage={true} />
+        <Navbar
+          toggleSidebar={toggleSidebar}
+          checkForSellPage={true}
+          isSellPage={true}
+        />
       </div>
 
       <div className="w-full h-screen pt-16 flex flex-col md:flex-row font-sans text-sm bg-gray-50">
