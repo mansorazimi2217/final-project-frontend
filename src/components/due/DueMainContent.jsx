@@ -417,7 +417,7 @@ export default function DueCustomersPage() {
             <p className="text-sm text-gray-700 mt-1">
               Total Remaining:{" "}
               <span className="font-bold text-red-600">
-                ৳{totalRemainValue.toFixed(2)}
+                {totalRemainValue.toFixed(2)}$
               </span>
             </p>
           </div>

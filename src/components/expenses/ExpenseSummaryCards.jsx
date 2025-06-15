@@ -40,7 +40,7 @@ const ExpenseSummaryCards = ({ filteredExpenses }) => {
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-2xl shadow-lg text-white transform hover:scale-[1.02] transition-transform">
+      <div className="bg-gradient-to-r from-[#006EBD] to-[#006EBD] p-6 rounded-2xl shadow-lg text-white transform hover:scale-[1.02] transition-transform">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm opacity-80">Paid by Cash</p>
@@ -54,12 +54,12 @@ const ExpenseSummaryCards = ({ filteredExpenses }) => {
             </p>
           </div>
           <div className="bg-white bg-opacity-20 p-3 rounded-full">
-            <MdPayments className="text-2xl text-green-500" />
+            <MdPayments className="text-2xl text-[#006EBD]" />
           </div>
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-2xl shadow-lg text-white transform hover:scale-[1.02] transition-transform">
+      <div className="bg-gradient-to-r from-[#006EBD] to-[#006EBD] p-6 rounded-2xl shadow-lg text-white transform hover:scale-[1.02] transition-transform">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm opacity-80">Paid by Bank</p>
@@ -73,7 +73,7 @@ const ExpenseSummaryCards = ({ filteredExpenses }) => {
             </p>
           </div>
           <div className="bg-white bg-opacity-20 p-3 rounded-full">
-            <MdOutlineAccountBalance className="text-2xl text-red-500" />
+            <MdOutlineAccountBalance className="text-2xl text-[#006EBD]" />
           </div>
         </div>
       </div>
