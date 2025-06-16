@@ -229,10 +229,10 @@ const ExpensesPage = (isSidebarOpen) => {
       <div className="relative">
         <button
           onClick={() => setShowOptions(!showOptions)}
-          className="flex items-center gap-2 px-4 py-2 border border-gray-500 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+          className="w-full flex items-center gap-2 px-4 py-2 border border-gray-500 rounded-lg text-gray-700 hover:bg-gray-50 transition"
         >
           <FiDownload />
-          <span>Export</span>
+          <span>Export To ! </span>
         </button>
 
         {showOptions && (
@@ -275,7 +275,7 @@ const ExpensesPage = (isSidebarOpen) => {
               Manage your business expenses efficiently
             </p>
           </div>
-          <div className="mt-4 md:mt-0 flex gap-3">
+          <div className="mt-4 md:mt-0 flex flex-col md:flex-row gap-3">
             <ExportButton />
             <button
               onClick={() => {

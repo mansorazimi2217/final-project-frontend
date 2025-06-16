@@ -6,7 +6,7 @@ const ExpenseFilters = ({ filters, setFilters, categories }) => {
 
   return (
     <div className="bg-white p-4 rounded-2xl shadow-md mb-6">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch gap-2 sm:gap-4 w-full">
         <div className="relative flex-1">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
@@ -19,7 +19,7 @@ const ExpenseFilters = ({ filters, setFilters, categories }) => {
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
+          className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg w-full sm:w-auto ${
             showFilters
               ? "bg-blue-100 text-blue-600"
               : "bg-gray-100 text-gray-600"

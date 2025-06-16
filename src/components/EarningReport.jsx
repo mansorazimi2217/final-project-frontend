@@ -156,7 +156,7 @@ export default function EarningReportPage() {
               const to = new Date(e.target.value);
               setDateRange((prev) => ({ from: prev.from || to, to }));
             }}
-            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className=" border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="date"

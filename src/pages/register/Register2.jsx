@@ -338,6 +338,9 @@ const Register2 = () => {
 
         {/* Right: Form */}
         <div className="w-full lg:w-1/2 overflow-y-auto p-6 md:p-10">
+          <span>
+            <Link to={"/"}>{"<--"}Back</Link>
+          </span>
           <h2 className="text-3xl mb-4">Register</h2>
           <p className="mb-3">Register now and use from 100% free!</p>
 

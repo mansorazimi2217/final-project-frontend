@@ -89,7 +89,10 @@ function ProductsCard({
 
               <div className="p-4 flex flex-col flex-grow">
                 <div className="flex justify-between items-center mb-1">
-                  <h5 className="text-md font-semibold text-gray-700">
+                  {/* <h5 className="text-md font-semibold text-gray-700">
+                    {product.name}
+                  </h5> */}
+                  <h5 className="text-xs sm:text-xs md:text-md font-semibold text-gray-700">
                     {product.name}
                   </h5>
                   <span className="text-sm bg-gray-200 text-gray-600 px-2 py-0.5 rounded">

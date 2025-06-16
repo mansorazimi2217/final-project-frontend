@@ -26,15 +26,18 @@ const Login2 = () => {
   return (
     <>
       <div
-        className="min-h-screen py-20"
+        className="min-h-screen py-10 md:py-20"
         style={{
           backgroundImage: "linear-gradient(115deg, #006EBD , #F9F9F9)",
         }}
       >
         <div className="container mx-auto">
-          <div className="flex flex-col lg:flex-row w-8/12 bg-white rounded-xl mx-auto shadow-lg onverflow-hidden">
-            <div className="w-full lg:w-1/2 px-10 py-12">
+          <div className="flex flex-col lg:flex-row w-11/12 md:w-8/12 bg-white md:px-10 rounded-xl mx-auto shadow-lg onverflow-hidden">
+            <div className="w-full lg:w-1/2 px-3 md:px-10 py-12">
               <div className="mb-5">
+                <span>
+                  <Link to={"/"}>{"<--"}Back</Link>
+                </span>
                 <h3 className="text-3xl">Welcome back!</h3>
                 <p style={{ fontSize: "12px", fontWeight: "bold" }}>
                   Enter your email & password

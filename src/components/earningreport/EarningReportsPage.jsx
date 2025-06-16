@@ -420,14 +420,33 @@ export default function EarningReport() {
                 Clear Filters
               </button>
             )}
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition"
-            >
-              <Filter className="w-4 h-4" />
-              {showFilters ? "Hide" : "Show"} Filters
-            </button>
-            <div className="flex gap-2">
+
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <button
+                onClick={exportToExcel}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition w-full sm:w-auto"
+              >
+                <FileDown className="w-4 h-4" />
+                Excel
+              </button>
+
+              <button
+                onClick={exportToPDF}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition w-full sm:w-auto"
+              >
+                <FileText className="w-4 h-4" />
+                PDF
+              </button>
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition w-full sm:w-auto"
+              >
+                <Filter className="w-4 h-4" />
+                {showFilters ? "Hide" : "Show"} Filters
+              </button>
+            </div>
+
+            {/* <div className="flex gap-2">
               <button
                 onClick={exportToExcel}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
@@ -442,7 +461,7 @@ export default function EarningReport() {
                 <FileText className="w-4 h-4" />
                 PDF
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 
