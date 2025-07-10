@@ -12,7 +12,7 @@ function SideBarSellPage({
   filters,
   handleFilterChange,
 }) {
-  const [filtersOpen, setFiltersOpen] = useState(true);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const uniqueCompanies = [
     "All",
     ...new Set(filteredProducts.map((p) => p.company)),
@@ -128,7 +128,11 @@ function SideBarSellPage({
                 onClick={() => handleProductClick(item)}
               >
                 <img
-                  src={item.image}
+                  src={
+                    item.image === "https://via.placeholder.com/50"
+                      ? "/pp.png"
+                      : item.image
+                  }
                   alt={item.name}
                   className="w-12 h-12 rounded-lg object-cover border border-gray-300 shadow-sm"
                 />
@@ -161,74 +165,3 @@ function SideBarSellPage({
 }
 
 export default SideBarSellPage;
-
-// import React from "react";
-// import Input from "./Input";
-// function SideBarSellPage({
-//   mobileSidebarOpen,
-//   isMobile,
-//   setSearchTerm,
-//   searchTerm,
-//   filteredProducts,
-//   handleProductClick,
-// }) {
-//   return (
-//     <div>
-//       <div
-//         className={`${
-//           mobileSidebarOpen ? "block" : "hidden"
-//         } md:block w-full md:w-[280px] bg-white border-r border-gray-200 p-4 overflow-y-auto space-y-4 shadow-md fixed md:relative h-full z-10 md:z-0`}
-//         style={{ top: isMobile ? "56px" : "0" }}
-//       >
-//         <Input
-//           label="Search Product"
-//           placeholder="Search products..."
-//           value={searchTerm}
-//           onChange={(e) => setSearchTerm(e.target.value)}
-//         />
-//         <div className="space-y-3">
-//           {filteredProducts.map((item) => {
-//             const isLowStock = item.stock < 10;
-//             return (
-//               <div
-//                 key={item.id}
-//                 className="group relative flex items-center p-3 rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 shadow-sm hover:shadow-md hover:ring-2 hover:ring-blue-100 transition-all duration-200 cursor-pointer"
-//                 onClick={() => handleProductClick(item)}
-//               >
-//                 <img
-//                   src={item.image}
-//                   alt={item.name}
-//                   className="w-12 h-12 rounded-lg object-cover border border-gray-300 shadow-sm"
-//                 />
-//                 <div className="ml-3 flex-1">
-//                   <div className="text-sm font-semibold text-gray-800 truncate">
-//                     {item.name}
-//                   </div>
-//                   <div className="text-xs text-gray-500 flex items-center justify-between mt-0.5">
-//                     <span className="text-blue-600 font-semibold">
-//                       ${item.price}
-//                     </span>
-//                     <span
-//                       className={`ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold transition-all duration-150 ${
-//                         isLowStock
-//                           ? "bg-red-100 text-red-700 border border-red-200"
-//                           : "bg-green-100 text-green-700 border border-green-200"
-//                       }`}
-//                       title={
-//                         isLowStock ? "Low stock! Restock soon." : "In stock"
-//                       }
-//                     >
-//                       {item.stock} left
-//                     </span>
-//                   </div>
-//                 </div>
-//               </div>
-//             );
-//           })}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default SideBarSellPage;

@@ -82,7 +82,11 @@ function ProductsCard({
               className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-101 p-1 flex flex-col relative animate-fadeInSmooth"
             >
               <img
-                src={`http://localhost:3000${product.img}`}
+                src={
+                  product.img
+                    ? `http://localhost:3000${product.img}`
+                    : "/pp.png"
+                }
                 alt={product.name}
                 className="w-full h-60 object-contain object-center rounded-xl mb-2 transition duration-300 hover:brightness-90 bg-white"
               />

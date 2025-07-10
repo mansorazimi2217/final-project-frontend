@@ -156,10 +156,19 @@ function ProductRow({ product }) {
             whileHover={{ scale: 1.1 }}
             className="flex-shrink-0 h-10 w-10 overflow-hidden rounded-md"
           >
-            <img
+            {/* <img
               className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
               src={product.image}
               alt={product.name}
+            /> */}
+            <img
+              src={
+                product.image === "https://via.placeholder.com/50"
+                  ? "/pp.png"
+                  : product.image
+              }
+              alt={product.name || "Item"}
+              className="w-12 h-12 rounded-lg object-cover border border-gray-300 shadow-sm"
             />
           </motion.div>
           <div className="ml-4">
