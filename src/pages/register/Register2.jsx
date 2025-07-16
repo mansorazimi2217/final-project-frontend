@@ -85,7 +85,7 @@ const Register2 = () => {
     if (!name.trim()) return `${field} is required`;
     if (name.length < 2) return `${field} must be at least 2 characters`;
     if (name.length > 50) return `${field} is too long (max 50 characters)`;
-    if (!/^[a-zA-Z\s-]+$/.test(name))
+    if (!/^[\p{Script=Arabic}a-zA-Z\s-]+$/u.test(name))
       return `${field} can only contain letters, spaces and hyphens`;
     return "";
   };
@@ -95,7 +95,7 @@ const Register2 = () => {
     if (name.length < 2) return "Business name must be at least 2 characters";
     if (name.length > 100)
       return "Business name is too long (max 100 characters)";
-    if (!/^[a-zA-Z0-9\s\-.,'&]+$/.test(name)) {
+    if (!/^[\p{Script=Arabic}a-zA-Z0-9\s\-.,'&]+$/u.test(name)) {
       return "Business name contains invalid characters";
     }
     return "";

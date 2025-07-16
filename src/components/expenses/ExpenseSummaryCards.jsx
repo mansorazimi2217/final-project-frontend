@@ -15,20 +15,13 @@ const ExpenseSummaryCards = ({ filteredExpenses }) => {
       .reduce((sum, e) => sum + e.amount, 0),
   };
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <div className="bg-gradient-to-r from-[#006EBD] to-[#006EBD] p-6 rounded-2xl shadow-lg text-white transform hover:scale-[1.02] transition-transform">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm opacity-80">Total Expenses</p>
-            <p className="text-2xl font-bold">{formatCurrency(totals.all)}</p>
+            <p className="text-2xl font-bold">{totals.all} AFN</p>
             <p className="text-xs mt-1 opacity-80">
               {filteredExpenses.length} transactions
             </p>
@@ -44,7 +37,7 @@ const ExpenseSummaryCards = ({ filteredExpenses }) => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm opacity-80">Paid by Cash</p>
-            <p className="text-2xl font-bold">{formatCurrency(totals.cash)}</p>
+            <p className="text-2xl font-bold">{totals.cash} AFN</p>
             <p className="text-xs mt-1 opacity-80">
               {
                 filteredExpenses.filter((e) => e.paymentMethod === "Cash")
@@ -63,7 +56,7 @@ const ExpenseSummaryCards = ({ filteredExpenses }) => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm opacity-80">Paid by Bank</p>
-            <p className="text-2xl font-bold">{formatCurrency(totals.bank)}</p>
+            <p className="text-2xl font-bold">{totals.bank} AFN</p>
             <p className="text-xs mt-1 opacity-80">
               {
                 filteredExpenses.filter((e) => e.paymentMethod === "Bank")

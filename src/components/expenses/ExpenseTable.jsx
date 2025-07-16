@@ -78,7 +78,7 @@ const ExpenseTable = ({ filteredExpenses, categories, onEdit, onDelete }) => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                    {formatCurrency(expense.amount)}
+                    {expense.amount} AFN
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div className="flex items-center gap-2">

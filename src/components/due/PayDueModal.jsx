@@ -40,7 +40,7 @@ const PayDueModal = ({ isOpen, onClose, customer, onPay }) => {
           </label>
           <input
             type="text"
-            value={`$${amountDue.toFixed(2)}`}
+            value={`${amountDue.toFixed(2)} AFN`}
             disabled
             className="w-full border rounded px-3 py-2 bg-gray-100 text-gray-700"
           />
@@ -71,7 +71,7 @@ const PayDueModal = ({ isOpen, onClose, customer, onPay }) => {
           </button>
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-[#006EBD] text-white rounded hover:bg-[#0059a0]"
+            className="px-4 mx-2 py-2 bg-[#006EBD] text-white rounded hover:bg-[#0059a0]"
           >
             Pay Now
           </button>

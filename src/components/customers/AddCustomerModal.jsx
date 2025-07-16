@@ -105,7 +105,6 @@ function AddCustomerModal({ showModal, setShowModal, dispatch }) {
   };
 
   const { user } = useAuthContext();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -133,23 +132,48 @@ function AddCustomerModal({ showModal, setShowModal, dispatch }) {
         body: JSON.stringify(dataToSend),
       });
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Handle duplicate email/phone errors
+        if (response.status === 400) {
+          if (responseData.field === "email") {
+            setErrors((prev) => ({
+              ...prev,
+              email: responseData.error,
+            }));
+          } else if (responseData.field === "phone") {
+            setErrors((prev) => ({
+              ...prev,
+              phone: responseData.error,
+            }));
+          } else if (responseData.field === "both") {
+            setErrors((prev) => ({
+              ...prev,
+              email: "This email is already registered",
+              phone: "This phone number is already registered",
+            }));
+          }
+        }
+        throw new Error(
+          responseData.error || `HTTP error! status: ${response.status}`
+        );
       }
 
-      const newCustomer = await response.json();
+      const newCustomer = responseData;
       dispatch({ type: "CREATE_CUSTOMER", payload: newCustomer });
 
       setShowSuccess(true);
       resetForm();
     } catch (error) {
       console.error("Error:", error);
-      // Handle API errors (e.g., duplicate email)
-      if (error.message.includes("email")) {
-        setErrors((prev) => ({
-          ...prev,
-          email: "This email is already registered",
-        }));
+      // Generic error handling
+      if (
+        !error.message.includes("email") &&
+        !error.message.includes("phone")
+      ) {
+        // You might want to show a toast notification here for other errors
+        console.error("Unexpected error:", error);
       }
     } finally {
       setIsSubmitting(false);

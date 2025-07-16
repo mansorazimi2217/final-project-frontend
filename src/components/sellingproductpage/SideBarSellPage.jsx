@@ -83,7 +83,7 @@ function SideBarSellPage({
 
               <div>
                 <label className="block text-gray-700 font-medium mb-1">
-                  Max Price: ${filters.price}
+                  Max Price: {filters.price} AFN
                 </label>
                 <input
                   type="range"
@@ -142,7 +142,7 @@ function SideBarSellPage({
                   </div>
                   <div className="text-xs text-gray-500 flex items-center justify-between mt-0.5">
                     <span className="text-blue-600 font-semibold">
-                      ${item.price}
+                      {item.price} AFN
                     </span>
                     <span
                       className={`ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold transition-all duration-150 ${

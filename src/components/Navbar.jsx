@@ -204,25 +204,7 @@ const Navbar = ({ toggleSidebar, isSellPage }) => {
               </motion.div>
 
               <div className="py-1">
-                <motion.button
-                  onClick={() => setIsMenuOpen(false)}
-                  whileHover={{
-                    x: 5,
-                    backgroundColor: "rgba(0, 110, 189, 0.08)",
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full px-4 py-3 text-left text-sm text-gray-700 flex items-center gap-3 transition-all"
-                >
-                  <div className="p-1.5 bg-[#006EBD]/10 rounded-lg">
-                    <FaUserCog className="text-[#006EBD] text-sm" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span>Profile Settings</span>
-                    <span className="text-xs text-gray-400">
-                      Update your account
-                    </span>
-                  </div>
-                </motion.button>
+                {/* here update profile well came  */}
 
                 <motion.button
                   onClick={handleLogout}
@@ -253,3 +235,25 @@ const Navbar = ({ toggleSidebar, isSellPage }) => {
 };
 
 export default Navbar;
+
+{
+  /* <motion.button
+                  onClick={() => setIsMenuOpen(false)}
+                  whileHover={{
+                    x: 5,
+                    backgroundColor: "rgba(0, 110, 189, 0.08)",
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full px-4 py-3 text-left text-sm text-gray-700 flex items-center gap-3 transition-all"
+                >
+                  <div className="p-1.5 bg-[#006EBD]/10 rounded-lg">
+                    <FaUserCog className="text-[#006EBD] text-sm" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span>Profile Settings</span>
+                    <span className="text-xs text-gray-400">
+                      Update your account
+                    </span>
+                  </div>
+                </motion.button> */
+}

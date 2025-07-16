@@ -1,34 +1,86 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, Plus, Image as ImageIcon, CheckCircle } from "lucide-react";
 import { useProductsContext } from "../hooks/useProductsContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ProductsForm from "./ProductsForm";
 
 const AddModal = ({ setAddModal }) => {
   const { dispatch } = useProductsContext();
+  const { user } = useAuthContext();
 
+  // Form state
   const [name, setName] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [desc, setDesc] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [buyPrice, setByPrice] = useState("");
+  const [buyPrice, setBuyPrice] = useState("");
   const [sellingPrice, setSellingPrice] = useState("");
   const [expireDate, setExpireDate] = useState("");
   const [comeDate, setComeDate] = useState("");
-  const [img, setImg] = useState("");
-  const [currency, setCurrency] = useState("$");
+  const [img, setImg] = useState(null);
+  const [imgPreview, setImgPreview] = useState(null);
+  const [currency, setCurrency] = useState("AFG");
 
+  // Error handling
   const [error, setError] = useState(null);
-  const [emptFeilds, setEmptFeilds] = useState([]);
+  const [emptyFields, setEmptyFields] = useState([]);
+  const [priceError, setPriceError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const { user } = useAuthContext();
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImg(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-  const hundleSubmit = async (e) => {
+  const resetForm = () => {
+    setName("");
+    setBrand("");
+    setQuantity("");
+    setCategory("");
+    setDesc("");
+    setBuyPrice("");
+    setSellingPrice("");
+    setComeDate("");
+    setExpireDate("");
+    setImg(null);
+    setImgPreview(null);
+    setEmptyFields([]);
+    setError(null);
+    setPriceError(null);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+    setPriceError(null);
+
+    // Validate prices
+    if (
+      buyPrice &&
+      sellingPrice &&
+      parseFloat(buyPrice) >= parseFloat(sellingPrice)
+    ) {
+      setPriceError("Buy price must be smaller than selling price");
+      setIsSubmitting(false);
+      return;
+    }
 
     if (!user) {
-      setError("you most be logged in");
+      setError("You must be logged in");
+      setIsSubmitting(false);
       return;
     }
 
@@ -43,37 +95,57 @@ const AddModal = ({ setAddModal }) => {
     formData.append("currency", currency);
     formData.append("expire_date", expireDate);
     formData.append("come_date", comeDate);
-    formData.append("productImage", img);
-
-    const response = await fetch("http://localhost:3000/api/products", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: formData,
-    });
-
-    const json = await response.json();
-
-    if (!response.ok) {
-      setError(json.error);
-      setEmptFeilds(json.emptFeilds || []);
+    if (img) {
+      formData.append("productImage", img);
     }
 
-    if (response.ok) {
-      setError(null);
-      setEmptFeilds([]);
-      setName("");
-      setBrand("");
-      setQuantity("");
-      setCategory("");
-      setDesc("");
-      setByPrice("");
-      setSellingPrice("");
-      setComeDate("");
-      setExpireDate("");
-      setImg(null);
+    try {
+      const response = await fetch("http://localhost:3000/api/products", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: formData,
+      });
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        // Handle duplicate product error
+        if (json.error?.includes("already exists")) {
+          setError("A product with this name already exists");
+          setEmptyFields(["name"]);
+        } else {
+          setError(json.error || "Failed to add product");
+          setEmptyFields(json.emptyFields || []);
+        }
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Reset form
+      resetForm();
       dispatch({ type: "CREATE_PRODUCT", payload: json });
+
+      // Show success state
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
+
+      // Show toast notification
+      toast.success("Product added successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "colored",
+      });
+    } catch (err) {
+      setError("An error occurred while adding the product");
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -83,251 +155,69 @@ const AddModal = ({ setAddModal }) => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50"
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-4"
       >
-        <div
-          className="bg-white rounded-none md:rounded-3xl shadow-2xl 
-                     w-full h-full md:w-full md:max-w-3xl md:h-auto 
-                     overflow-y-auto relative p-6"
+        <motion.div
+          className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative"
+          layout
         >
-          <button
-            className="absolute top-3 right-3 text-gray-500 hover:text-black"
-            onClick={() => setAddModal(false)}
-          >
-            <X />
-          </button>
-
-          <h2 className="text-xl font-semibold mb-6 text-blue-600">
-            Add New Product
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-            <div>
-              <input
-                className={"border p-2 rounded-xl w-full"}
-                style={{
-                  backgroundColor: emptFeilds.includes("name") ? "pink" : "",
-                }}
-                placeholder={
-                  emptFeilds.includes("name") ? "name is required" : "Name"
-                }
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+          {/* Success overlay */}
+          {showSuccess && (
+            <div className="absolute inset-0 bg-green-50/90 z-20 flex flex-col items-center justify-center gap-3">
+              <CheckCircle className="w-16 h-16 text-green-500" />
+              <h3 className="text-2xl font-bold text-green-700">
+                Product Added Successfully!
+              </h3>
+              <p className="text-green-600">
+                You can now add another product or close this window
+              </p>
             </div>
+          )}
 
-            <select
-              className="border border-red-500 p-2 rounded-xl"
-              style={{
-                backgroundColor: emptFeilds.includes("category") ? "pink" : "",
-              }}
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+          <div className="sticky top-0 bg-white z-10 p-6 border-b flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-blue-600 flex items-center gap-2">
+              <Plus size={24} /> Add New Product
+            </h2>
+            <button
+              className="text-gray-500 hover:text-black transition-colors p-1 rounded-full hover:bg-gray-100"
+              onClick={() => setAddModal(false)}
             >
-              <option value="" disabled>
-                {emptFeilds.includes("category")
-                  ? "Category is required"
-                  : "Select Category"}
-              </option>
-              <option value="Fashion & Apparel">Fashion & Apparel</option>
-              <option value="Electronics & Gadgets">
-                Electronics & Gadgets
-              </option>
-              <option value="Home & Kitchen">Home & Kitchen</option>
-              <option value="Food & Beverages">Food & Beverages</option>
-              <option value="Health & Personal Care">
-                Health & Personal Care
-              </option>
-              <option value="Baby & Kids">Baby & Kids</option>
-              <option value="Automotive">Automotive</option>
-              <option value="Pet Supplies">Pet Supplies</option>
-              <option value="Sports & Fitness">Sports & Fitness</option>
-              <option value="Arts, Crafts & Stationery">
-                Arts, Crafts & Stationery
-              </option>
-              <option value="Books & Media">Books & Media</option>
-              <option value="Beauty & Cosmetics">Beauty & Cosmetics</option>
-              <option value="Furniture">Furniture</option>
-              <option value="Tools & Industrial">Tools & Industrial</option>
-              <option value="Travel & Outdoors">Travel & Outdoors</option>
-              <option value="Jewelry & Accessories">
-                Jewelry & Accessories
-              </option>
-              <option value="Toys & Games">Toys & Games</option>
-              <option value="Office Supplies">Office Supplies</option>
-              <option value="Grocery & Essentials">Grocery & Essentials</option>
-              <option value="Footwear">Footwear</option>
-            </select>
-
-            {/* <input
-              className={"border border-red-500 p-2 rounded-xl"}
-              placeholder={
-                emptFeilds.includes("category")
-                  ? "category is required"
-                  : "Catogery"
-              }
-              style={{
-                backgroundColor: emptFeilds.includes("category") ? "pink" : "",
-              }}
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            /> */}
-
-            <input
-              className={"border p-2 rounded-xl"}
-              // placeholder="Stock"
-              placeholder={
-                emptFeilds.includes("quantity")
-                  ? "quantity is required"
-                  : "Quantity"
-              }
-              style={{
-                backgroundColor: emptFeilds.includes("quantity") ? "pink" : "",
-              }}
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              type="number"
-            />
-
-            <input
-              className="border p-2 rounded-xl"
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImg(e.target.files[0])}
-            />
-
-            <div className="col-span-1 md:col-span-2">
-              <input
-                className={"border  p-2 rounded-xl w-full"}
-                placeholder={
-                  emptFeilds.includes("brand")
-                    ? "Company is required"
-                    : "Company"
-                }
-                style={{
-                  backgroundColor: emptFeilds.includes("brand") ? "pink" : "",
-                }}
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Pricing
-              </label>
-              <div className="flex flex-col md:flex-row gap-4">
-                <input
-                  type="number"
-                  className={
-                    "border border-gray-300 p-2  rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  }
-                  // placeholder="Selling Price"
-                  placeholder={
-                    emptFeilds.includes("selling_price")
-                      ? "Selling price is required"
-                      : "Selling Price"
-                  }
-                  style={{
-                    backgroundColor: emptFeilds.includes("selling_price")
-                      ? "pink"
-                      : "",
-                  }}
-                  value={sellingPrice}
-                  onChange={(e) => setSellingPrice(e.target.value)}
-                />
-
-                <input
-                  type="number"
-                  className={
-                    "border border-gray-300 p-2 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  }
-                  // placeholder="Buy Price"
-                  placeholder={
-                    emptFeilds.includes("buy_price")
-                      ? "Buy Price is required"
-                      : "Buy Price"
-                  }
-                  style={{
-                    backgroundColor: emptFeilds.includes("buy_price")
-                      ? "pink"
-                      : "",
-                  }}
-                  value={buyPrice}
-                  onChange={(e) => setByPrice(e.target.value)}
-                />
-
-                {/* Currency Selector */}
-                <select
-                  className="border border-gray-300 p-2 rounded-xl w-full md:w-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                >
-                  <option value="$">$</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-600 mb-1">
-                Production Date
-              </label>
-              <input
-                className={"border  p-2 rounded-xl"}
-                value={comeDate}
-                onChange={(e) => setComeDate(e.target.value)}
-                type="date"
-                style={{
-                  backgroundColor: emptFeilds.includes("come_date")
-                    ? "pink"
-                    : "",
-                }}
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-600 mb-1">
-                Expiry Date
-              </label>
-              <input
-                className="border  p-2 rounded-xl"
-                value={expireDate}
-                onChange={(e) => setExpireDate(e.target.value)}
-                type="date"
-                style={{
-                  backgroundColor: emptFeilds.includes("expire_date")
-                    ? "pink"
-                    : "",
-                }}
-              />
-            </div>
-
-            <textarea
-              className="border p-2 rounded-xl md:col-span-2"
-              placeholder={
-                emptFeilds.includes("desc")
-                  ? "Description is required"
-                  : "Description"
-              }
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-              rows={4}
-              style={{
-                backgroundColor: emptFeilds.includes("desc") ? "pink" : "",
-              }}
-            />
+              <X size={24} />
+            </button>
           </div>
 
-          <button
-            onClick={hundleSubmit}
-            className="bg-[#006EBD] hover:bg-blue-700 text-white rounded-xl py-2 px-6 mt-8 w-full"
-            style={{ marginTop: "25px" }}
-          >
-            Add Product
-          </button>
-
-          {error && <div className="p-3 bg-red-100">{error}</div>}
-        </div>
+          <div className="p-6">
+            <ProductsForm
+              error={error}
+              emptyFields={emptyFields}
+              priceError={priceError}
+              setPriceError={setPriceError}
+              handleSubmit={handleSubmit}
+              name={name}
+              brand={brand}
+              category={category}
+              quantity={quantity}
+              handleImageChange={handleImageChange}
+              buyPrice={buyPrice}
+              sellingPrice={sellingPrice}
+              comeDate={comeDate}
+              expireDate={expireDate}
+              desc={desc}
+              setName={setName}
+              setBrand={setBrand}
+              setCategory={setCategory}
+              setQuantity={setQuantity}
+              setBuyPrice={setBuyPrice}
+              setSellingPrice={setSellingPrice}
+              setComeDate={setComeDate}
+              setExpireDate={setExpireDate}
+              setDesc={setDesc}
+              imgPreview={imgPreview}
+              isSubmitting={isSubmitting}
+              setAddModal={setAddModal}
+            />
+          </div>
+        </motion.div>
       </motion.div>
     </AnimatePresence>
   );

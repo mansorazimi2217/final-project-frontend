@@ -367,7 +367,7 @@ export default function EarningReport() {
           <StatCard
             icon={<BadgeDollarSign className="text-[#006EBD] w-6 h-6" />}
             label="Total Earnings"
-            value={`$${totalEarning.toLocaleString()}`}
+            value={`${totalEarning.toLocaleString()} AFN`}
             trend="up"
             // percentage="12%"
             bgColor="bg-blue-50"
@@ -383,7 +383,7 @@ export default function EarningReport() {
           <StatCard
             icon={<TrendingUp className="text-[#006EBD] w-6 h-6" />}
             label="Total Profit"
-            value={`$${totalProfit.toLocaleString()}`}
+            value={`${totalProfit.toLocaleString()} AFN`}
             trend="down"
             // percentage="15%"
             bgColor="bg-blue-50"
@@ -445,23 +445,6 @@ export default function EarningReport() {
                 {showFilters ? "Hide" : "Show"} Filters
               </button>
             </div>
-
-            {/* <div className="flex gap-2">
-              <button
-                onClick={exportToExcel}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
-              >
-                <FileDown className="w-4 h-4" />
-                Excel
-              </button>
-              <button
-                onClick={exportToPDF}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
-              >
-                <FileText className="w-4 h-4" />
-                PDF
-              </button>
-            </div> */}
           </div>
         </div>
 
@@ -572,9 +555,9 @@ export default function EarningReport() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-semibold text-gray-900">
-                        ${(row.quantity * row.pricePerUnit).toFixed(2)}
+                        {(row.quantity * row.pricePerUnit).toFixed(2)} AFN
                         <div className="text-xs text-gray-400 mt-1">
-                          ${row.pricePerUnit} × {row.quantity}
+                          {row.pricePerUnit} × {row.quantity} AFN
                         </div>
                       </div>
                     </td>
@@ -607,7 +590,7 @@ export default function EarningReport() {
               <div className="text-sm font-medium text-gray-700">
                 Total:{" "}
                 <span className="text-[#006EBD]">
-                  ${totalEarning.toFixed(2)}
+                  {totalEarning.toFixed(2)} AFN
                 </span>
               </div>
             </div>

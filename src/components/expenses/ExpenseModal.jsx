@@ -375,7 +375,7 @@ const ExpenseModal = ({
               {/* Amount */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Amount ($)
+                  Amount (AFN)
                 </label>
                 <input
                   type="number"

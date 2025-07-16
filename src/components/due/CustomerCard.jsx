@@ -10,9 +10,9 @@ const CustomerCard = ({ customer, onPayDue }) => {
   const [emailContent, setEmailContent] = useState(
     `Dear ${
       customer.name
-    }, you have an unpaid balance of $${customer.remainValue?.toFixed(
+    }, you have an unpaid balance of ${customer.remainValue?.toFixed(
       2
-    )} from your last purchase on ${new Date(
+    )} AFN from your last purchase on ${new Date(
       customer.lastPurchaseAt
     ).toLocaleDateString()}. Please clear your payment within 7 days. Thank you!`
   );
@@ -30,9 +30,9 @@ const CustomerCard = ({ customer, onPayDue }) => {
     en: {
       template: `Dear ${
         customer.name
-      }, you have an unpaid balance of $${customer.remainValue?.toFixed(
+      }, you have an unpaid balance of ${customer.remainValue?.toFixed(
         2
-      )} from your last purchase on ${new Date(
+      )} AFN from your last purchase on ${new Date(
         customer.lastPurchaseAt
       ).toLocaleDateString()}. Please clear your payment within 7 days. Thank you!`,
       subject: "Payment Reminder",
@@ -56,7 +56,7 @@ const CustomerCard = ({ customer, onPayDue }) => {
         customer.name
       }، شما مبلغ پرداخت نشده ${customer.remainValue?.toFixed(
         2
-      )} دلار از خرید مورخ ${new Date(
+      )} افغانی از خرید مورخ ${new Date(
         customer.lastPurchaseAt
       ).toLocaleDateString(
         "fa-IR"
@@ -82,7 +82,7 @@ const CustomerCard = ({ customer, onPayDue }) => {
         customer.name
       }،تاته پیسې نه دي ورکړل شوي.${customer.remainValue?.toFixed(
         2
-      )} د پیرود نیټې څخه ډالر ${new Date(
+      )} د پیرود نیټې څخه افغانی ${new Date(
         customer.lastPurchaseAt
       ).toLocaleDateString(
         "fa-IR"

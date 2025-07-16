@@ -20,13 +20,10 @@ export default function SalesHeader({ totalSales }) {
         whileHover={{ scale: 1.02 }}
         className="mt-4 md:mt-0 flex items-center gap-3 bg-white px-4 py-3 rounded-lg shadow-sm"
       >
-        <div className="p-2 bg-[#e6f2ff] rounded-full">
-          <FiDollarSign className="text-[#006EBD] text-xl" />
-        </div>
         <div>
           <p className="text-xs text-gray-500">Total Sales</p>
           <p className="text-lg font-semibold text-gray-800">
-            {totalSales.toLocaleString()}
+            {totalSales.toLocaleString()} AFN
           </p>
         </div>
       </motion.div>

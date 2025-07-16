@@ -71,7 +71,7 @@ function BillHeader({ bill }) {
           >
             💵 Total Price:{" "}
             <span className="font-bold text-[#006EBD]">
-              ${bill.total.toLocaleString()}
+              {bill.total.toLocaleString()} AFN
             </span>
           </motion.div>
 
@@ -81,7 +81,7 @@ function BillHeader({ bill }) {
           >
             ✅ Total Paid:{" "}
             <span className="font-bold text-green-600">
-              ${bill.totalPaied.toLocaleString()}
+              {bill.totalPaied.toLocaleString()} AFN
             </span>
           </motion.div>
 
@@ -92,7 +92,7 @@ function BillHeader({ bill }) {
             >
               ❗ Remaining:{" "}
               <span className="font-bold text-red-500">
-                ${bill.remainValue.toLocaleString()}
+                {bill.remainValue.toLocaleString()} AFN
               </span>
             </motion.div>
           )}
@@ -156,11 +156,6 @@ function ProductRow({ product }) {
             whileHover={{ scale: 1.1 }}
             className="flex-shrink-0 h-10 w-10 overflow-hidden rounded-md"
           >
-            {/* <img
-              className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
-              src={product.image}
-              alt={product.name}
-            /> */}
             <img
               src={
                 product.image === "https://via.placeholder.com/50"
@@ -179,13 +174,13 @@ function ProductRow({ product }) {
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {product.price.toLocaleString()}$
+        {product.price.toLocaleString()} afn
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
         {product.quantity}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-        {product.total.toLocaleString()}$
+        {product.total.toLocaleString()} afn
       </td>
     </motion.tr>
   );

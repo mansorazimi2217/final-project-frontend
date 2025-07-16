@@ -111,8 +111,8 @@ export default function ReturnDuePage() {
         "No.",
         "Customer ID",
         "Customer Name",
-        "Total Due ($)",
-        "Return Value ($)",
+        "Total Due (AFN)",
+        "Return Value (AFN)",
         "Date",
       ];
 
@@ -159,7 +159,6 @@ export default function ReturnDuePage() {
 
       const doc = new jsPDF({ orientation: "landscape" });
 
-      // Make sure the plugin is registered
       const autoTable = autoTablePlugin.default;
 
       // Title
@@ -183,8 +182,8 @@ export default function ReturnDuePage() {
         i + 1,
         r.customerId,
         r.customerName || "N/A",
-        `$${parseFloat(r.totalDue).toFixed(2)}`,
-        `$${parseFloat(r.returnValue).toFixed(2)}`,
+        `${parseFloat(r.totalDue).toFixed(2)} AFN`,
+        `${parseFloat(r.returnValue).toFixed(2)} AFN`,
         formatDate(r.date),
       ]);
 
@@ -253,14 +252,6 @@ export default function ReturnDuePage() {
       console.error("Failed to delete record:", error);
       toast.error("Failed to delete record");
     }
-  };
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-    }).format(amount);
   };
 
   const clearFilters = () => {
@@ -497,10 +488,12 @@ export default function ReturnDuePage() {
                           </div>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-red-600">
-                          {formatCurrency(item.totalDue)}
+                          {/* {formatCurrency(item.totalDue)} AFN */}
+                          {item.totalDue} AFN
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-green-600">
-                          {formatCurrency(item.returnValue)}
+                          {/* {formatCurrency(item.returnValue)} AFN */}
+                          {item.returnValue} AFN
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                           {formatDate(item.date)}

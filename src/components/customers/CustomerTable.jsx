@@ -130,7 +130,7 @@ function CustomerTable({
                     </td>
                     <td className="px-3 py-3">{customer.totalOrders}</td>
                     <td className="px-3 py-3">
-                      ${customer.totalSpent?.toFixed(2)}
+                      {customer.totalSpent?.toFixed(2)} AFN
                     </td>
                     <td className="px-3 py-3 relative">
                       <button
