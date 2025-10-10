@@ -26,7 +26,6 @@ export default function CustomerPage() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const { mycustomers, dispatch } = useCustomerContext();
   const { user } = useAuthContext();
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("http://localhost:3000/api/customers/", {
@@ -39,8 +38,6 @@ export default function CustomerPage() {
         dispatch({ type: "SET_CUSTOMER", payload: json });
       }
     };
-
-    console.log(user + " hello baby");
 
     if (user) {
       fetchData();
@@ -90,10 +87,12 @@ export default function CustomerPage() {
     ?.filter((c) => {
       if (filter === "New Customers") return c.totalOrders <= 10;
       if (filter === "Much Spent") return parseFloat(c.totalSpent) > 2000;
-      if (filter === "Kabul") return c.address.includes("kabul");
+      if (filter === "Kabul") return c.address.includes("Kabul");
       return true;
     })
     ?.filter((c) => c.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  console.log(filteredCustomers);
 
   const handleAction = (action, customer) => {
     setSelectedCustomer(customer);

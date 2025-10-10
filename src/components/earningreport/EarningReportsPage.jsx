@@ -16,7 +16,6 @@ import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useAuthContext } from "../../hooks/useAuthContext";
-
 // Format date to human readable format
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -178,142 +177,173 @@ export default function EarningReport() {
     XLSX.writeFile(wb, "Earning_Report.xlsx");
   };
 
-  // PDF Export with styling
   const exportToPDF = () => {
     const doc = new jsPDF();
 
-    // Add title
-    doc.setFontSize(20);
-    doc.setTextColor(0, 110, 189); // #006EBD color
-    doc.text("Earnings Report", 105, 20, { align: "center" });
+    // Store information
+    const storeInfo = user;
 
-    // Add subtitle
-    doc.setFontSize(12);
+    // --- Header ---
+    doc.setFontSize(18);
+    doc.setTextColor(0, 110, 189);
+    doc.text(storeInfo?.businessName, 105, 15, { align: "center" });
+
+    doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
-    doc.text(
-      "Detailed analysis of your store's earnings and sales performance",
-      105,
-      28,
-      { align: "center" }
-    );
+    doc.text(storeInfo?.email, 105, 22, { align: "center" });
 
-    // Add date
-    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 35, {
+    doc.setFontSize(20);
+    doc.setTextColor(0, 110, 189);
+    doc.text("Earnings Report", 105, 40, { align: "center" });
+
+    doc.setFontSize(12);
+    doc.setTextColor(80, 80, 80);
+    doc.text("Detailed summary of sales and performance", 105, 47, {
       align: "center",
     });
 
-    // Add stats cards section
-    doc.setFontSize(16);
-    doc.setTextColor(0, 0, 0);
-    doc.text("Summary Statistics", 14, 50);
+    let yPosition = 55;
 
-    // Get card data
-    const cards = [
-      {
-        icon: "",
-        label: "Total Earnings",
-        value: `$${totalEarning.toLocaleString()}`,
-      },
-      {
-        icon: "",
-        label: "Total Sales",
-        value: totalSales.toLocaleString(),
-      },
-      {
-        icon: "",
-        label: "Total Profit",
-        value: `$${totalProfit.toLocaleString()}`,
-      },
-      {
-        icon: "",
-        label: "Top Product",
-        value: topProduct || "N/A",
-      },
-    ];
-
-    // Add cards to PDF (2 columns)
-    let yPosition = 60;
-    cards.forEach((card, index) => {
-      const x = index % 2 === 0 ? 20 : 110;
-      if (index % 2 === 0 && index !== 0) yPosition += 30;
-
-      // Card background
-      doc.setFillColor(240, 240, 240);
-      doc.roundedRect(x, yPosition, 80, 25, 3, 3, "F");
-
-      // Card icon
-      doc.setFontSize(14);
-      doc.text(card.icon, x + 5, yPosition + 10);
-
-      // Card label
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.text(card.label, x + 15, yPosition + 10);
-
-      // Card value
+    // --- Filters Section ---
+    if (isFilterActive) {
       doc.setFontSize(12);
       doc.setTextColor(0, 0, 0);
-      doc.text(card.value, x + 5, yPosition + 20);
+      doc.text("Report Filters", 14, yPosition);
+
+      yPosition += 5;
+
+      doc.setDrawColor(200, 200, 200);
+      doc.setFillColor(245, 245, 245);
+      doc.roundedRect(14, yPosition, 180, 15, 3, 3, "F");
+
+      doc.setFontSize(10);
+      doc.setTextColor(60, 60, 60);
+
+      const filterDetails = [];
+      if (filters.fromDate) {
+        filterDetails.push(
+          `From: ${new Date(filters.fromDate).toLocaleDateString()}`
+        );
+      }
+      if (filters.toDate) {
+        filterDetails.push(
+          `To: ${new Date(filters.toDate).toLocaleDateString()}`
+        );
+      }
+      if (filters.customer) {
+        filterDetails.push(`Customer: ${filters.customer}`);
+      }
+      if (filters.product) {
+        filterDetails.push(`Product: ${filters.product}`);
+      }
+
+      doc.text(filterDetails.join("   |   "), 18, yPosition + 10);
+
+      yPosition += 25;
+    }
+
+    // --- Generated On ---
+    doc.setFontSize(9);
+    doc.setTextColor(120, 120, 120);
+    doc.text(
+      `Generated on: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
+      14,
+      yPosition
+    );
+
+    yPosition += 10;
+
+    // --- Summary Section ---
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Summary Statistics", 14, yPosition);
+
+    yPosition += 6;
+
+    const cards = [
+      {
+        label: "Total Earnings",
+        value: `${totalEarning.toLocaleString()} AFN`,
+      },
+      { label: "Total Sales", value: totalSales.toLocaleString() },
+      { label: "Total Profit", value: `${totalProfit.toLocaleString()} AFN` },
+      { label: "Top Product", value: topProduct || "N/A" },
+    ];
+
+    let cardY = yPosition + 5;
+    cards.forEach((card, index) => {
+      const x = index % 2 === 0 ? 14 : 110;
+      if (index % 2 === 0 && index !== 0) cardY += 20;
+
+      doc.setFillColor(245, 250, 255);
+      doc.setDrawColor(200, 220, 255);
+      doc.roundedRect(x, cardY, 85, 18, 2, 2, "FD");
+
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      doc.text(card.label, x + 5, cardY + 7);
+
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.text(card.value, x + 5, cardY + 14);
     });
 
-    // Add table section
-    doc.setFontSize(16);
-    doc.text("Transaction Details", 14, yPosition + 40);
+    cardY += 30;
 
-    // Prepare table data
+    // --- Transactions Table ---
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Transaction Details", 14, cardY);
+
     const headers = ["Date", "Product", "Quantity", "Customer", "Amount"];
-
     const rows = filteredRows.map((row) => [
       formatDate(row.date),
       row.product,
       row.quantity,
       row.customer,
-      `$${(row.quantity * row.pricePerUnit).toFixed(2)}`,
+      `${(row.quantity * row.pricePerUnit).toFixed(2)} AFN`,
     ]);
 
-    // Add table to PDF
     autoTable(doc, {
       head: [headers],
       body: rows,
-      startY: yPosition + 45,
+      startY: cardY + 5,
       theme: "grid",
       headStyles: {
-        fillColor: [0, 110, 189], // #006EBD color
+        fillColor: [0, 110, 189],
         textColor: 255,
         fontSize: 10,
-        cellPadding: 3,
+        halign: "center",
       },
       bodyStyles: {
         fontSize: 9,
         cellPadding: 3,
       },
       alternateRowStyles: {
-        fillColor: [240, 240, 240],
-      },
-      margin: { top: yPosition + 45 },
-      styles: {
-        overflow: "linebreak",
-        cellWidth: "wrap",
+        fillColor: [245, 245, 245],
       },
       columnStyles: {
         0: { cellWidth: 30 }, // Date
-        1: { cellWidth: 40 }, // Product
-        2: { cellWidth: 20 }, // Quantity
-        3: { cellWidth: 40 }, // Customer
-        4: { cellWidth: 25 }, // Amount
+        1: { cellWidth: 45 }, // Product
+        2: { cellWidth: 20, halign: "center" }, // Quantity
+        3: { cellWidth: 45 }, // Customer
+        4: { cellWidth: 30, halign: "right" }, // Amount
       },
     });
-    doc.save("report.pdf");
 
-    // Add footer with total
+    // --- Footer Totals ---
     if (filteredRows.length > 0) {
       const finalY = doc.lastAutoTable.finalY + 10;
-      doc.setFontSize(12);
-      doc.text(`Total: $${totalEarning.toFixed(2)}`, 14, finalY);
-      doc.text(`Showing ${filteredRows.length} transactions`, 160, finalY);
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Total Earnings: ${totalEarning.toFixed(2)} AFN`, 14, finalY);
+      doc.text(`Total Profit: ${totalProfit.toFixed(2)} AFN`, 14, finalY + 6);
+      doc.text(`Transactions: ${filteredRows.length}`, 160, finalY, {
+        align: "right",
+      });
     }
 
-    // Save the PDF
+    // --- Save ---
     doc.save("Earning_Report.pdf");
   };
 

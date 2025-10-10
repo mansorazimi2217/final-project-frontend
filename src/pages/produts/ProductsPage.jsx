@@ -58,7 +58,7 @@ export default function ProductsPage() {
     if (!expiryDate) return false;
     const today = dayjs();
     const expiry = dayjs(expiryDate);
-    return expiry.diff(today, "day") <= 30;
+    return expiry.diff(today, "day") <= 60;
   };
   const isExpired = (expiryDate) => {
     if (!expiryDate) return false;

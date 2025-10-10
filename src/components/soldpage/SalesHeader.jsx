@@ -21,7 +21,7 @@ export default function SalesHeader({ totalSales }) {
         className="mt-4 md:mt-0 flex items-center gap-3 bg-white px-4 py-3 rounded-lg shadow-sm"
       >
         <div>
-          <p className="text-xs text-gray-500">Total Sales</p>
+          <p className="text-xs text-gray-500">Total Paied</p>
           <p className="text-lg font-semibold text-gray-800">
             {totalSales.toLocaleString()} AFN
           </p>

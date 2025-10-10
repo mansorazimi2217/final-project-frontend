@@ -1,16 +1,49 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { Trash2 } from "lucide-react";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 export default function SalesTable({ bills }) {
+  const { user } = useAuthContext();
+  const [billList, setBillList] = useState(bills);
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this sale?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/bills/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete the sale");
+      }
+
+      // Update UI after successful delete
+      setBillList((prev) => prev.filter((bill) => bill.id !== id));
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert("Error deleting the sale. Please try again.");
+    }
+  };
+
   return (
     <motion.div layout className="space-y-6">
-      {bills.map((bill) => (
-        <BillItem key={bill.id} bill={bill} />
+      {billList.map((bill) => (
+        <BillItem key={bill.id} bill={bill} onDelete={handleDelete} />
       ))}
     </motion.div>
   );
 }
 
-function BillItem({ bill }) {
+function BillItem({ bill, onDelete }) {
   return (
     <motion.div
       layout
@@ -20,17 +53,17 @@ function BillItem({ bill }) {
       whileHover={{ y: -3 }}
       className="bg-white rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md border border-gray-100"
     >
-      <BillHeader bill={bill} />
+      <BillHeader bill={bill} onDelete={onDelete} />
       <ProductsTable products={bill.products} />
     </motion.div>
   );
 }
 
-function BillHeader({ bill }) {
+function BillHeader({ bill, onDelete }) {
   const hasDue = bill.remainValue > 0;
 
   return (
-    <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white rounded-xl shadow-sm">
+    <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white rounded-xl shadow-sm relative">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
         {/* Customer Info */}
         <div className="space-y-2">
@@ -99,7 +132,7 @@ function BillHeader({ bill }) {
         </div>
 
         {/* Summary Badge */}
-        <div className="flex flex-col justify-center lg:items-end mt-4 md:mt-0">
+        <div className="flex flex-col justify-center lg:items-end mt-0 md:mt-0">
           <div
             className={`text-sm font-semibold px-4 py-2 rounded-full w-fit ${
               hasDue ? "bg-red-100 text-red-600" : "bg-green-100 text-green-700"
@@ -109,6 +142,16 @@ function BillHeader({ bill }) {
           </div>
         </div>
       </div>
+
+      {/* Delete Button */}
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => onDelete(bill._id)}
+        className="absolute bottom-4 right-4  p-2 rounded-full bg-red-50 text-red-600 hover:bg-red-100 shadow-sm"
+      >
+        <Trash2 className="w-5 h-5" />
+      </motion.button>
     </div>
   );
 }
@@ -144,7 +187,6 @@ function ProductsTable({ products }) {
 }
 
 function ProductRow({ product }) {
-  console.log("hello fack you :  " + product.name + product.image);
   return (
     <motion.tr
       whileHover={{ backgroundColor: "#f9fafb" }}

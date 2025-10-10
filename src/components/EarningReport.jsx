@@ -116,7 +116,7 @@ export default function EarningReportPage() {
 
   return (
     <div className="px-1 py-2 space-y-8">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 pt-3">
         <div className="flex items-center gap-3 bg-white border rounded-lg p-4 shadow">
           <DollarSign className="text-green-600" />
           <div>
@@ -141,6 +141,18 @@ export default function EarningReportPage() {
             <p className="text-sm text-gray-500">Total Due</p>
             <p className="text-lg font-semibold text-gray-800">
               {totalDueFromCustomers.toFixed(2)} AFN
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 bg-white border rounded-lg p-4 shadow">
+          <DollarSign className="text-blue-600" />
+          <div>
+            <p className="text-sm text-gray-500">Pure Earn</p>
+            <p className="text-lg font-semibold text-gray-800">
+              {totalEarningsAllTime.toFixed(2) -
+                totalDueFromCustomers.toFixed(2)}{" "}
+              AFN
             </p>
           </div>
         </div>

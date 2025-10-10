@@ -69,7 +69,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="#about"
                   className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
                 >
                   About Us
@@ -77,18 +77,18 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="#features"
                   className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
                 >
-                  Services
+                  features
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="#comments"
                   className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
                 >
-                  Pricing
+                  Comments
                 </a>
               </li>
               <li>
@@ -105,46 +105,11 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold text-white">Our Services</h4>
             <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
-                >
-                  Inventory Management
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
-                >
-                  Order Tracking
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
-                >
-                  Analytics Dashboard
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
-                >
-                  Supplier Management
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
-                >
-                  Reporting Tools
-                </a>
-              </li>
+              <li>Inventory Management</li>
+              <li>Order Tracking</li>
+              <li>Analytics Dashboard</li>
+              <li>Supplier Management</li>
+              <li>Reporting Tools</li>
             </ul>
           </div>
 
@@ -156,21 +121,16 @@ const Footer = () => {
                 <p className="text-gray-300">Kabul Afghanistan</p>
               </div>
               <div className="flex items-center space-x-3">
+                <MdPhone className="text-blue-400" />
+                0700 707 077
+              </div>
+              <div className="flex items-center space-x-3">
                 <MdEmail className="text-blue-400" />
                 <a
                   href="mailto:info@oims.com"
                   className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
                 >
                   info@oims.com
-                </a>
-              </div>
-              <div className="flex items-center space-x-3">
-                <MdPhone className="text-blue-400" />
-                <a
-                  href="tel:0700707077"
-                  className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
-                >
-                  0700 707 077
                 </a>
               </div>
             </div>

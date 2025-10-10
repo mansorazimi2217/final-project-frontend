@@ -48,9 +48,9 @@ function ProfessionalNavbar() {
               <span className="text-2xl font-bold bg-gradient-to-r from-[#006EBD] to-[#0091EA] bg-clip-text text-transparent">
                 OIMS
               </span>
-              <span className="text-xs font-medium bg-[#E6F2FA] text-[#006EBD] px-2 py-1 rounded-full">
+              {/* <span className="text-xs font-medium bg-[#E6F2FA] text-[#006EBD] px-2 py-1 rounded-full">
                 PRO
-              </span>
+              </span> */}
             </Link>
 
             {/* Desktop Navigation */}

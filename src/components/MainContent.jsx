@@ -62,13 +62,11 @@ const MainContent = ({ isSidebarOpen }) => {
           {
             title: "Total Customers",
             value: totalCustomers.toString(),
-            change: "0%",
             icon: "👥",
           },
           {
             title: "Total products",
             value: totalProducts.toString(),
-            change: "0%",
             icon: "📦",
           },
         ]);
@@ -118,13 +116,6 @@ const MainContent = ({ isSidebarOpen }) => {
                   <p className="text-2xl font-semibold mt-1 text-gray-800">
                     {stat.value}
                   </p>
-                  <p
-                    className={`text-sm mt-1 ${
-                      stat.change.startsWith("+")
-                        ? "text-green-500"
-                        : "text-red-500"
-                    }`}
-                  ></p>
                 </div>
                 <span className="text-2xl">{stat.icon}</span>
               </div>

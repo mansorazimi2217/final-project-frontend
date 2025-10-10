@@ -368,11 +368,15 @@ function MainContentSellPage({
                 {cartItems.map((item, index) => (
                   <tr key={index} className="border-t hover:bg-gray-50">
                     <td className="p-3">{item.id}</td>
-                    <td className="p-3">${item.price}</td>
+                    <td className="p-3">
+                      {item.price} <span style={{ fontSize: "10px" }}>AFN</span>
+                    </td>
                     <td className="p-3">{item.name}</td>
                     <td className="p-3">{item.quantity}</td>
                     <td className="p-3">{item.company}</td>
-                    <td className="p-3">${item.total}</td>
+                    <td className="p-3">
+                      {item.total} <span style={{ fontSize: "10px" }}>AFN</span>
+                    </td>
                     <td className="p-3">
                       <button
                         onClick={() => handleDeleteClick(index)}
@@ -484,7 +488,8 @@ function MainContentSellPage({
 
         <div className="flex justify-between items-center">
           <div className="text-lg font-semibold text-gray-800">
-            Total: {totalAmount.toFixed(2)}
+            Total: {totalAmount.toFixed(2)}{" "}
+            <span style={{ fontSize: "14px" }}>AFN</span>
           </div>
           <Button onClick={handleSubmit}>Purchase</Button>
         </div>
@@ -494,198 +499,3 @@ function MainContentSellPage({
 }
 
 export default MainContentSellPage;
-
-// return (
-//   <div className="flex-1 p-4 md:p-6 overflow-y-auto">
-//     <div className="border p-4 md:p-6 rounded-lg space-y-6 shadow-sm bg-white">
-//       <h2 className="text-lg font-semibold text-gray-800 mb-5">
-//         Sell Products
-//       </h2>
-
-//       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//         <Input label="Product ID" name="id" value={formData.id} readOnly />
-//         <Input
-//           label="Price Per Unit"
-//           name="price"
-//           value={formData.price}
-//           readOnly
-//         />
-//         <Input
-//           label="Product Name"
-//           name="name"
-//           value={formData.name}
-//           readOnly
-//         />
-//         <div>
-//           <Input
-//             label="Quantity"
-//             name="quantity"
-//             value={formData.quantity}
-//             onChange={handleChange}
-//           />
-//           {stockError && (
-//             <div className="text-red-500 text-xs mt-1 flex items-center">
-//               <FiAlertTriangle className="mr-1" /> {stockError}
-//             </div>
-//           )}
-//         </div>
-//         <Input
-//           label="Company Name"
-//           name="company"
-//           value={formData.company}
-//           readOnly
-//         />
-//         <Input
-//           label="Total Price"
-//           name="total"
-//           value={formData.total}
-//           readOnly
-//         />
-//       </div>
-
-//       <div className="flex justify-end">
-//         <Button onClick={handleAddToCart}>Add To Cart</Button>
-//       </div>
-
-//       <div className="border rounded-lg overflow-hidden">
-//         <div className="overflow-x-auto">
-//           <table className="w-full text-sm">
-//             <thead>
-//               <tr className="bg-gray-100 text-left">
-//                 <th className="p-3">Product ID</th>
-//                 <th className="p-3">Price</th>
-//                 <th className="p-3">Name</th>
-//                 <th className="p-3">Qty</th>
-//                 <th className="p-3">Company</th>
-//                 <th className="p-3">Total</th>
-//                 <th className="p-3">Action</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {cartItems.map((item, index) => (
-//                 <tr key={index} className="border-t hover:bg-gray-50">
-//                   <td className="p-3">{item.id}</td>
-//                   <td className="p-3">${item.price}</td>
-//                   <td className="p-3">{item.name}</td>
-//                   <td className="p-3">{item.quantity}</td>
-//                   <td className="p-3">{item.company}</td>
-//                   <td className="p-3">${item.total}</td>
-//                   <td className="p-3">
-//                     <button
-//                       onClick={() => handleDeleteClick(index)}
-//                       className="text-red-500 hover:text-red-700"
-//                     >
-//                       <FiTrash2 />
-//                     </button>
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-
-//       <div className="flex gap-4 items-center">
-//         <label className="flex items-center space-x-2">
-//           <input
-//             type="radio"
-//             name="customerType"
-//             value="permanent"
-//             checked={customerType === "permanent"}
-//             onChange={(e) => setCustomerType(e.target.value)}
-//           />
-//           <span>Permanent Customer</span>
-//         </label>
-//         <label className="flex items-center space-x-2">
-//           <input
-//             type="radio"
-//             name="customerType"
-//             value="temporary"
-//             checked={customerType === "temporary"}
-//             onChange={(e) => setCustomerType(e.target.value)}
-//           />
-//           <span>Guest Customer</span>
-//         </label>
-//       </div>
-
-//       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//         {customerType === "permanent" ? (
-//           <div>
-//             <label className="block text-sm font-medium text-gray-700 mb-1">
-//               Select Customer
-//             </label>
-//             <select
-//               value={selectedCustomerId}
-//               onChange={(e) =>
-//                 e.target.value === "add_new"
-//                   ? navigate("/dashboard/customers")
-//                   : setSelectedCustomerId(e.target.value)
-//               }
-//               className="w-full border rounded-md px-3 py-2 focus:outline-none"
-//             >
-//               <option value="">Select a customer</option>
-//               {filteredCustomers.map((cust) => (
-//                 <option key={cust._id} value={cust._id}>
-//                   {cust.name} , ({cust.email}) , {cust.phone} , {cust._id}
-//                 </option>
-//               ))}
-//               <option value="add_new">➕ Add New Customer</option>
-//             </select>
-//           </div>
-//         ) : (
-//           <Input
-//             label="Customer Name"
-//             placeholder="Enter customer name"
-//             value={tempCustomerName}
-//             onChange={(e) => setTempCustomerName(e.target.value)}
-//           />
-//         )}
-
-//         <div>
-//           <Input
-//             label="Total Paid"
-//             placeholder="Enter total paid"
-//             value={totalPaied}
-//             onChange={handleTotalPaidChange}
-//             readOnly={customerType === "temporary"}
-//           />
-//           {totalPaidError && (
-//             <p className="text-sm text-red-500 mt-1">{totalPaidError}</p>
-//           )}
-//         </div>
-//       </div>
-
-//       {customerType === "permanent" && selectedCustomer && (
-//         <div className="bg-gray-50 p-4 rounded-md border">
-//           <h4 className="font-semibold text-gray-700 mb-2">Customer Info</h4>
-//           <p className="text-sm text-gray-600">
-//             📧 <strong>Email:</strong> {selectedCustomer.email}
-//           </p>
-//           <p className="text-sm text-gray-600">
-//             🏠 <strong>Address:</strong> {selectedCustomer.address}
-//           </p>
-//           <p className="text-sm text-gray-600">
-//             💰 <strong>Total Spent:</strong>{" "}
-//             {selectedCustomer.totalSpent || 0}
-//           </p>
-//           <p className="text-sm text-gray-600">
-//             🛒 <strong>Total Orders:</strong>{" "}
-//             {selectedCustomer.totalOrders || 0}
-//           </p>
-//           <p className="text-sm text-gray-600">
-//             💸 <strong>Remain Value :</strong>{" "}
-//             {selectedCustomer.remainValue || 0}
-//           </p>
-//         </div>
-//       )}
-
-//       <div className="flex justify-between items-center">
-//         <div className="text-lg font-semibold text-gray-800">
-//           Total: {totalAmount.toFixed(2)}
-//         </div>
-//         <Button onClick={handleSubmit}>Purchase</Button>
-//       </div>
-//     </div>
-//     <Link to={"/dashboard"}>Home Page</Link>
-//   </div>
-// );

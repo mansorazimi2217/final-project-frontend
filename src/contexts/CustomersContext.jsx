@@ -3,6 +3,7 @@ import { createContext, useReducer } from "react";
 export const CustomerContext = createContext();
 
 export const CustomerReducer = (state, action) => {
+  console.log(state.mycustomers);
   switch (action.type) {
     case "SET_CUSTOMER":
       return { mycustomers: action.payload };

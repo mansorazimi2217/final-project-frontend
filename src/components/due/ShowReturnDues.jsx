@@ -156,28 +156,44 @@ export default function ReturnDuePage() {
     try {
       const { jsPDF } = await import("jspdf");
       const autoTablePlugin = await import("jspdf-autotable");
+      const autoTable = autoTablePlugin.default;
 
       const doc = new jsPDF({ orientation: "landscape" });
 
-      const autoTable = autoTablePlugin.default;
-
-      // Title
+      // === Header (Shop Info) ===
       doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
       doc.setTextColor(primaryColor);
-      doc.setFontSize(16);
-      doc.text("Return Due Records", 14, 15);
+      doc.text(user?.businessName || "My Shop", 14, 15);
 
-      // Subtitle
       doc.setFont("helvetica", "normal");
-      doc.setTextColor(100);
       doc.setFontSize(10);
+      doc.setTextColor(80);
+      doc.text(user?.email || "example@email.com", 14, 21);
+      if (user?.phone) doc.text(`Phone: ${user.phone}`, 14, 26);
+
+      // === Title ===
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor(primaryColor);
+      doc.text("Return Due Records", 148, 15, { align: "center" });
+
+      // === Subtitle (Generated Date) ===
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(100);
       doc.text(
         `Generated on: ${format(new Date(), "MMM dd, yyyy 'at' hh:mm a")}`,
-        14,
-        22
+        148,
+        22,
+        { align: "center" }
       );
 
-      // Table data
+      // === Filters Summary ===
+      let filterY = 34;
+      filterY += 6;
+
+      // === Table Data ===
       const tableData = filteredData.map((r, i) => [
         i + 1,
         r.customerId,
@@ -187,7 +203,6 @@ export default function ReturnDuePage() {
         formatDate(r.date),
       ]);
 
-      // ✅ Call autoTable function directly, passing the doc
       autoTable(doc, {
         head: [
           [
@@ -200,17 +215,15 @@ export default function ReturnDuePage() {
           ],
         ],
         body: tableData,
-        startY: 30,
-        theme: "grid",
+        startY: filterY + 4,
+        theme: "striped",
         headStyles: {
           fillColor: primaryColor,
           textColor: "#ffffff",
           fontStyle: "bold",
           halign: "center",
         },
-        alternateRowStyles: {
-          fillColor: secondaryColor,
-        },
+        alternateRowStyles: { fillColor: secondaryColor },
         styles: {
           fontSize: 9,
           cellPadding: 4,
@@ -218,9 +231,27 @@ export default function ReturnDuePage() {
           halign: "center",
         },
         margin: { top: 30, left: 10, right: 10 },
-        tableWidth: "wrap",
       });
 
+      // === Summary Footer ===
+      const totalDue = filteredData.reduce(
+        (sum, r) => sum + parseFloat(r.totalDue),
+        0
+      );
+      const totalReturn = filteredData.reduce(
+        (sum, r) => sum + parseFloat(r.returnValue),
+        0
+      );
+      const totalRecords = filteredData.length;
+
+      let finalY = doc.lastAutoTable.finalY + 10;
+      doc.setFontSize(11);
+      doc.setTextColor(20);
+      doc.text(`Total Records: ${totalRecords}`, 14, finalY);
+      doc.text(`Total Due: ${totalDue.toFixed(2)} AFN`, 80, finalY);
+      doc.text(`Total Return: ${totalReturn.toFixed(2)} AFN`, 160, finalY);
+
+      // === Save File ===
       const fileName = `return_due_records_${format(
         new Date(),
         "yyyy-MM-dd_HH-mm"
